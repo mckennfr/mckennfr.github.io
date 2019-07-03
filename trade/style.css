@@ -1,0 +1,6 @@
+body:after {
+content: url(logo.png);
+position: fixed;
+bottom: 4.5em;
+left: 0.5em;
+box-shadow: 5px 5px 10px #000; }

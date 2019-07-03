@@ -1,0 +1,542 @@
+---
+title: "Trade Presentation"
+author: "Shahzia Teja"
+date: "July 8, 2019"
+output: 
+  revealjs::revealjs_presentation:
+    theme: blood
+    css: style.css
+    self_contained: false
+    reveal_plugins: ["chalkboard"]
+reveal_options:
+  slideNumber: true
+  previewLinks: true
+  chalkboard:
+    theme: whiteboard
+    toggleNotesButton: false
+  slide_level: 2
+---
+
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+options(stringsAsFactors = FALSE, scipen = 20)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(ggplot2)
+
+```
+
+# Ceteris Paribus {data-background-iframe="https://vi.unctad.org/tpa/web/vol1/vol1home.html"}
+
+## Partial Equilibrium
+
+Partial Equilibrium for Trade & Regional Analysis
+
+Partial Equilibrium models allow us to examine the effects of economic shocks in a parsimonious modeling environment with few data requirements or assumptions.
+
+In this world, a specific market clears without regard to prices and quantity changes in other markets. In other words, all other prices, quantities and income are assumed to be fixed. Some of the advantages of this approach are obvious, including the ability to create and run models quickly, as well as producing intuitively appealing results.
+
+## Tariffs as a Shock
+
+When countries impose trade barriers, in this case in the form of tarrifs, prices and quantities of implicated goods can be expected to respond.
+
+We assume a large open economy with downward sloping import demand curves (this implies the country's demand affects prices). In general, an importing country is assumed to have prices above the world price, since the alternative would imply no trade takes place. Buyers are assumed to be indifferent between domestic and foreign-produced substitutes.
+
+# Simplest Partial Equilibrium Model
+
+## System Functions
+
+Domestic Demand: $Q_d=\alpha(P)^\eta$
+
+Domestic Supply: $Q_s=\beta(P)^\epsilon$
+
+Import Demand (the excess of domestic demand over domestic supply): $M_d=\alpha(P)^\eta-\beta(P)^\epsilon$
+
+Import Supply: $M_s=Y(P_w)^\theta$
+
+Internal Price: $P=(1+t)*P_w$
+
+## Autarky
+
+Without imports, domestic demand equals domestic supply.
+
+$Q_d = Q_s$ or $\alpha P^\eta = \beta P^\epsilon$
+
+which implies $\alpha / \beta = P^{\epsilon - \eta}$
+
+This can be solved for:
+$$P_0 = (\alpha / \beta) ^ \frac{1}{\epsilon - \eta}$$
+$$Q_0 = \alpha P_0^\eta = \alpha (\alpha / \beta) ^ \frac{\eta}{\epsilon - \eta} = \alpha ^ \frac{\epsilon}{\epsilon - \eta} \beta ^ \frac{-\eta}{\epsilon - \eta}$$
+
+## Free Trade
+
+In this case, import demand equals import supply...
+
+$M_d = M_s$ or $\alpha P^\eta - \beta P^\epsilon = \gamma P_w^\theta$
+
+but $P = (1 + t) P_w$ which implies:
+
+$\alpha (1 + t)^\eta P_w^\eta - \beta (1 + t)^\epsilon P_w^\epsilon = \gamma P_w^\theta$
+
+
+## Autarky Illustrated
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# demand and supply
+Qd <- function(p=1, alpha = 100, eta = -1) {
+  alpha * p ^ eta
+}
+
+Pd <- function(q = 100, alpha = 100, eta = -1) {
+  (q/alpha)^(1/eta)
+}
+
+Qs <- function(p = 1, beta = 100, epsilon = 3) {
+  beta * p ^ epsilon
+}
+
+
+par_alpha <- 7480.06
+par_beta  <- 1182.38
+par_gamma <- par_alpha - par_beta
+
+par_eta     <- -1
+par_epsilon <- 3
+par_theta   <- 10
+
+# no trade eq'm
+p0 <- (par_alpha / par_beta) ^ (1 / (par_epsilon - par_eta))
+q0 <- par_alpha * p0 ^ par_eta
+
+# benchmark equilibrium
+pars <- c(a = par_gamma, b = par_theta - par_eta, c= par_beta, d = par_epsilon - par_eta, e = par_alpha)
+
+f_bm <- function(pw, pars) {
+  unname(pars['a'] * pw ^ pars['b'] + pars['c'] * pw ^ pars['d'] - pars['e'])
+}
+
+rslt <- uniroot(f_bm, c(0.1,2), pars, tol=5e-10)
+pw <- rslt$root
+
+qw <- par_alpha * pw ^ par_eta
+qw_d <- par_beta * pw ^ par_epsilon
+qw_i <- qw - qw_d
+```
+
+Suppose: 
+
+$\alpha =$ `r par_alpha`, $\beta =$ `r par_beta`, $\gamma =$ `r par_gamma`,
+$\eta =$ `r par_eta`, $\epsilon =$ `r par_epsilon` and $\theta =$ `r par_theta` 
+
+Ignoring tariffis for now...
+
+This implies $P_0 =$ `r round(p0,2)` and $Q_0 =$ `r round(q0,2)`
+
+Whereas in the benchmark case, 
+
+$P^* = P_w = 1$ and $Q^* = Q_{Domestic} + Q_{Imported}$
+
+= `r par_beta` + `r par_gamma` = `r par_alpha`
+
+----
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+p <- seq(0.01, 2, .01)
+qd <- Qd(p, par_alpha)  # demand
+qs <- Qs(p, par_beta)  # domestic supply
+md <- qd - qs         # import demand
+
+mx <- max(c(qd, qs))
+mn <- min(c(qd, qs))
+
+df1 <- data.frame(x = qd, y = p, curve = rep("demand", length(p)))
+df2 <- data.frame(x = qs, y = p, curve = rep("supply", length(p)))
+df3 <- data.frame(x = md, y = p, curve = rep("imports", length(p)))
+
+df <- rbind(df1, df2, df3[df3$x >= 0,])
+
+plt1 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
+  geom_line(size=1.5) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  annotate("segment", x = 0, xend = q0, y = p0, yend = p0, linetype = 3) +
+  annotate("segment", x = q0, xend = q0, y = p0, yend = 0, linetype = 3) +
+  annotate("segment", x = 0, xend = par_alpha, y = 1, yend = 1, linetype = 2) +
+  annotate("segment", x = par_beta, xend = par_beta, y = 1, yend = 0, linetype = 2) +
+  annotate("segment", x = qw_i, xend = qw_i, y = 1, yend = 0, linetype = 2) +
+  annotate("segment", x = par_alpha, xend = par_alpha, y = 1, yend = 0, linetype = 2) +
+  coord_cartesian(xlim = c(0, 10000), ylim = c(0,2)) +
+  xlab("quantity") +
+  ylab("price") +
+  labs(title="Demand, Supply and Import Demand",
+       subtitle = "Import Demand is residual demand") +
+  annotate("text", x=q0, y=0.1, label="q[0]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=1.05, label="p[w]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=p0 + .05, label="p[0]", parse = TRUE, size = 5.2) +
+  annotate("text", x = par_beta, y=0.1, label = "q[Dom]", parse = TRUE, size = 5.2) +
+  annotate("text", x = qw_i, y=0.1, label = "q[Imp]", parse = TRUE, size = 5.2) +
+  annotate("text", x = par_alpha, y=0.1, label = "q[Tot]", parse = TRUE, size = 5.2)
+print(plt1)  
+
+```
+
+## Impact of Moving from Autarky to Free Trade
+
+Using demand and supply curves defined above, price falls from $P_0$ = `r round(p0, 2)` to $P_w$ = `r round(pw,2)`
+
+## Consumer Surplus
+
+$\Delta CS = -\int_{P_0}^{P_w} Q_d(u) du$
+
+but $p_w$ < $p_0$, so, 
+
+$\Delta CS = -\int_{P_w}^{P_0} -Q_d(u) du = \alpha \int_{P_w}^{P_0} u^\eta du$
+
+if $\eta \neq -1$, this equals $\alpha \left[\frac{u^{\eta + 1}}{\eta + 1}\right]_{P_w}^{P_0}$ 
+
+if $\eta = -1$, this equals $\alpha \left[\ln u \right]_{P_w}^{P_0}$
+
+
+In this case, $\Delta CS =$ `r round(par_alpha * (log(p0) - log(pw)),2)`
+
+----
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+df <- rbind(df1, df2)
+
+df4 <- data.frame(x = qd, y = p, curve="demand")
+df4 <- subset(df4, x <= qw & (y >= pw & y <= p0))
+df4 <- rbind(df4, df4[1:2,])
+row.names(df4) <- 1:nrow(df4)
+df4[nrow(df4)-1, 1] <- 0
+df4[nrow(df4), 1] <- 0
+df4[nrow(df4)-1, 2] <- p0
+df4[nrow(df4), 2] <- 1
+
+plt2 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
+  geom_line(size=1.5) +
+  geom_polygon(data = df4, aes(x=x,y=y), color="grey", alpha=0.2, show.legend = FALSE) +
+  geom_hline(yintercept = c(0, pw, p0)) +
+  geom_vline(xintercept = 0) +
+  annotate("segment", x= 350, xend = 350, y = p0 - 0.01, yend = pw + 0.01, arrow=arrow(length = unit(0.2, "cm"))) +
+  coord_cartesian(xlim = c(0, 10000), ylim = c(0,2)) +
+  annotate("text", x=350, y=p0 + .05, label="p[0]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=pw - .05, label="p[w]", parse = TRUE, size = 5.2) +
+  xlab("quantity") +
+  ylab("price") +
+  labs(title = "Increase in Consumer Surplus",
+       subtitle = "Opening to trade makes consumers better off")
+
+print(plt2)
+```
+
+## Producer Surplus
+
+$\Delta PS = \int_{P_0}^{P_w} Q_s(u) du$
+
+but $p_w$ < $p_0$, so, 
+
+$\Delta PS = -\int_{P_w}^{P_0} Q_s(u) du = -\beta \int_{P_w}^{P_0} u^\epsilon du$
+
+Since $\epsilon > 0$, this equals $-\beta \left[\frac{u^{\epsilon + 1}}{\epsilon + 1} \right]_{P_w}^{P_0}$
+
+
+In this case, $\Delta PS =$ `r round(-par_beta * (p0^(par_epsilon+1) - pw^(par_epsilon+1))/(par_epsilon+1),2)`
+
+----
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# producer surplus
+df5 <- data.frame(x = qs, y = p, curve="supply")
+df5 <- subset(df5, x <= qw & (y >= pw & y <= p0))
+df5 <- rbind(df5, df5[1:2,])
+row.names(df5) <- 1:nrow(df5)
+df5[nrow(df5)-1, 1] <- 0
+df5[nrow(df5), 1] <- 0
+df5[nrow(df5)-1, 2] <- p0
+df5[nrow(df5), 2] <- 1
+
+plt3 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
+  geom_line(size=1.5) +
+  geom_polygon(data = df5, aes(x=x,y=y), color="grey", alpha=0.2, show.legend = FALSE) +
+  geom_hline(yintercept = c(0, pw, p0)) +
+  geom_vline(xintercept = 0) +
+  annotate("segment", x= 350, xend = 350, y = p0 - 0.01, yend = pw + 0.01, arrow=arrow(length = unit(0.2, "cm"))) +
+  coord_cartesian(xlim = c(0, 10000), ylim = c(0,2)) +
+  annotate("text", x=350, y=p0 + .05, label="p[0]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=pw - .05, label="p[w]", parse = TRUE, size = 5.2) +
+  xlab("quantity") +
+  ylab("price") +
+  labs(title = "Reduction in Producer Surplus",
+       subtitle = "Opening to trade makes producers worse off")
+
+print(plt3)
+```
+
+## Net Change in Welfare
+
+In this case we have $\Delta CS + \Delta PS > 0$
+
+In fact, $\Delta CS + \Delta PS =$ `r round( par_alpha * (log(p0) - log(pw))- par_beta * (p0^(par_epsilon+1) - pw^(par_epsilon+1))/(par_epsilon+1), 2)`
+
+----
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# Net gain in welfare
+x <- seq(pw, p0, .01)
+y <- Qd(x, par_alpha)
+x1 <- seq(p0 - 0.01, pw, -0.01)
+y1 <- Qs(x1, par_beta)
+df6 <- data.frame(x = c(y,y1), y = c(x,x1), curve="demand")
+
+plt4 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
+  geom_line(size=1.5) +
+  geom_polygon(data = df6, aes(x=x,y=y), color="grey", alpha=0.2, show.legend = FALSE) +
+  geom_hline(yintercept = c(0, pw, p0)) +
+  geom_vline(xintercept = 0) +
+  annotate("segment", x= 350, xend = 350, y = p0 - 0.01, yend = pw + 0.01, arrow=arrow(length = unit(0.2, "cm"))) +
+  coord_cartesian(xlim = c(0, 10000), ylim = c(0,2)) +
+  annotate("text", x=350, y=p0 + .05, label="p[0]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=pw - .05, label="p[w]", parse = TRUE, size = 5.2) +
+  xlab("quantity") +
+  ylab("price") +
+  labs(title = "Net Increase in Welfare",
+       subtitle = "Consumers more better off than producers are worse off")
+
+print(plt4)
+```
+
+# Impact of Tariff in Simple Model
+
+## Prices \& Quantities
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# tariff equilibrium
+t <- 0.2
+pars <- c(a = par_gamma, 
+          b = par_theta - par_eta, 
+          c = par_beta * (1 + t) ^ par_epsilon, 
+          d = par_epsilon - par_eta, 
+          e = par_alpha * (1 + t) ^ par_eta)
+
+rslt <- uniroot(f_bm, c(0.1,2), pars, tol=5e-10)
+pw1 <- rslt$root
+
+p1 <- (1 + t) * pw1
+q1 <- par_alpha * p1 ^ par_eta
+q1_d <- par_beta * p1 ^ par_epsilon
+q1_i <- q1 - q1_d
+
+v_before <- c(pw, pw, qw_i, qw_d, qw, 0)
+v_after  <- c(pw1, p1, q1_i, q1_d, q1, (p1 - pw1) * q1_i)
+v_change <- v_after - v_before
+v_pct    <- ifelse(v_before > 0, v_change / v_before * 100, NA)
+v_decs   <- c(3, 3, 2, 2, 2, 2)
+
+c1 <- mapply(function(x,y) format(round(x,y), nsmall = y), v_before, v_decs)
+c2 <- mapply(function(x,y) format(round(x,y), nsmall = y), v_after, v_decs)
+c3 <- mapply(function(x,y) format(round(x,y), nsmall = y), v_change, v_decs)
+c4 <- format(round(v_pct,2),nsmall = 2)
+
+df_tab <- data.frame(Variables = c("Pw", "P", "Md", "Qs", "Qd", "Tariffs"),
+                     Before = c1, After =  c2, Change = c3, Percent = c4)
+kable(df_tab)
+
+TTE <- -0.5 * (qw_i + q1_i) * (pw1 - pw) # Terms of Trade Effect
+
+HTE <- 0.5 * (p1 - pw1) * (q1_i - qw_i) # Harberger Triangle Effect
+
+WE  <- TTE + HTE # Welfare Effect
+
+dCS <- -par_alpha * (log(p1) - log(pw))
+dPS <- par_beta * (p1^(par_epsilon + 1) - pw^(par_epsilon + 1)) / (par_epsilon + 1)
+dTariffs <- (p1 - pw1) * q1_i
+```
+
+$dW = -M dP_w + \frac{1}{2}(P - P_w) dM$
+
+Terms of trade effect: $-M dP_w =$ `r round(TTE,2)`
+
+Harberger triangle effect: $\frac{1}{2}(P - P_w) dM =$ `r round(HTE,2)`
+
+Welfare effect: $dW =$ `r round(TTE + HTE, 2)`
+
+## How Accurate is the approximation?
+
+$dW =$ `r round(TTE + HTE, 2)`
+
+$\Delta CS = \alpha \left[ \ln u \right]_{P_w}^{P_1} =$ `r round(dCS,2)`
+
+$\Delta PS = \frac{\beta}{\epsilon + 1} \left[ u^{\epsilon + 1} \right]_{P_w}^{P_1} =$ `r round(dPS,2)`
+
+$\Delta Tariffs = (P_w^1 - P_w) M =$ `r round(dTariffs,2)`
+
+$\Delta W =$ `r round(dCS + dPS + dTariffs,2)`
+
+----
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+plt5 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
+  geom_line(size=1.5) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  annotate("segment", x = 0, xend = q1, y = p1, yend = p1, linetype = 3) +
+  annotate("segment", x = q1, xend = q1, y = p1, yend = 0, linetype = 3) +
+  annotate("segment", x = q1_d, xend = q1_d, y = p1, yend = 0, linetype = 3) +
+  annotate("segment", x = 0, xend = qw, y = pw, yend = pw, linetype = 2) +
+  annotate("segment", x = qw_d, xend = qw_d, y = pw, yend = 0, linetype = 2) +
+  annotate("segment", x = par_alpha, xend = par_alpha, y = 1, yend = 0, linetype = 2) +
+  coord_cartesian(xlim = c(0, 10000), ylim = c(0,2)) +
+  xlab("quantity") +
+  ylab("price") +
+  labs(title="Demand and Supply",
+       subtitle = "Impact of a 20% Tariff") +
+  annotate("text", x=350, y=pw + .05, label="p[w]", parse = TRUE, size = 5.2) +
+  annotate("text", x=350, y=p1 + .05, label="p[1]", parse = TRUE, size = 5.2) +
+  annotate("text", x = qw, y=0.1, label = "q[w]", parse = TRUE, size = 5.2) +
+  annotate("text", x = q1, y=0.1, label = "q[1]", parse = TRUE, size = 5.2) +
+  annotate("text", x = qw_d, y=0.1, label = "q[w][d]", parse = TRUE, size = 5.2) +
+  annotate("text", x = q1_d, y=0.1, label = "q[1][d]", parse = TRUE, size = 5.2)
+  
+print(plt5)  
+```
+
+
+
+## Expected Outcome of Tariffs
+
+Basic micro tells us..
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+
+supply <- Hmisc::bezier(x = c(1, 8, 9),
+                        y = c(2, 4.5, 9)) %>%
+  as_data_frame()
+
+demand <- Hmisc::bezier(x=c(1, 3, 9),
+                        y=c(9, 3, 2)) %>%
+  as_data_frame()
+
+plot <- ggplot(mapping = aes(x,y)) + 
+  geom_path(data = supply, color = "Blue", size = 1) + 
+  geom_path(data = demand, color = "Orange", size = 1)+
+  coord_equal()
+plot
+```
+## what theory tells us..
+
+# Equilibrium (no trade)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+func_supply <- approxfun(supply$x, supply$y, rule=2)
+func_demand <- approxfun(demand$x, demand$y, rule=2)
+
+eql_x <- uniroot(function(x) func_supply(x)-func_demand(x), c(0,10)) 
+x_int <- eql_x$root
+y_int <- func_demand(x_int)
+
+
+plot + geom_hline(yintercept=y_int) + geom_vline(xintercept=x_int)
+```
+
+# Equilibrium (with trade)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+plot + geom_hline(yintercept = 2.5)
+```
+
+# A Tariff is Introduced
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+plot + geom_hline(yintercept = 3.5)
+```
+
+## Net Loss of Tariff
+``````{r echo=FALSE, warning=FALSE, message=FALSE}
+plot + geom_hline(yintercept=2.5) + geom_hline(yintercept=3.5)
+
+#we know the y value.. need x
+```
+
+## System Equations
+
+Domestic Demand: $$Q_d=\alpha(P)^\eta$$
+
+Domestic Supply: $$Q_s=\beta(P)^\epsilon$$
+
+Import Demand (the excess of domestic demand over domestic supply): $$M_d=\alpha(P)^\eta-\beta(P)^\epsilon$$
+
+Import Supply: $$M_s=Y(P_w)^\theta$$
+
+Internal Price: $$P=(1+t)*P_w$$
+
+# Assumptions
+Some text about the linear vs. non linear general approach (the presentation is a simplifcation to make it easy to understand)
+
+# Calibration
+Starting values given 
+
+# The Basic Model
+In which changes can lead to incorrect outcomes because the simplification only makes simulation results true locally
+
+## Intro GSIM
+Given the limitations of the simple model, GSIM is an alternative based on a 4x4 region trade region that assumes a linear form of the system equations.
+
+# Intro a Tariff
+And show how simulation compares here
+
+## Simulation results
+
+# Welfare outcomes?
+
+## Future Work
+Could be extended to model 11x11 provinces (or 12x12 with ROW) to look at provincial trade flows. Some related work being done internally, and some outside work (Stats Can Hexagon Paper) where gravity models suggest that trade flows could potentially be quite a bit higher and are impeded by barriers. What would we find if we relaxed some trade barriers?
+
+## Newton's Method
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+a <- 0.25
+b <- -1
+c <- 3
+d <- -1
+
+x <- seq(-1, 3, 0.1)
+y <- a * (x - b)^c + d
+
+x00 <- b + (-d/a)^(1/c)
+
+x0 <- 2
+y0 <-  a * (x0 - b)^c + d
+
+dydx <- c * a * (x0 - b)^(c-1)
+
+yint <- y0 - dydx * x0
+
+y1 <- 0
+x1 <- x0 + (y1 - y0) / dydx
+
+x2 <- 0.98 * x0
+y2 <- 0.9 * y0 + dydx * (x2 - x0)
+
+x3 <- 1.1 * x1
+y3 <- 0.9 * y0 + dydx * (x3 - x0)
+
+
+df <- data.frame(x = x, y = y)
+plt <- ggplot(df, aes(x,y)) + 
+  geom_line(size=1.2) + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_abline(intercept = yint, slope = dydx) + 
+  annotate("segment", x = 0, xend = x0, y = y0, yend = y0, linetype = 2) +
+  annotate("segment", x = x0, xend = x0, y = y0, yend = 0, linetype = 2) +
+  geom_point(data=data.frame(x=c(x00, x1, x0, x0), y=c(0,0,0,y0)), size=1.5, color="red") +
+  annotate("text", x = x0, y=0.5, label="x[0]", parse=TRUE) +
+  annotate("text", x = x1, y=0.5, label="x[1]", parse=TRUE) +
+  annotate("text", x = x00, y=0.5, label="x*", parse=FALSE) + 
+  annotate("segment", x= x2, xend = x3, y = y2, yend = y3, arrow=arrow(length = unit(0.2, "cm")))
+plt
+
+```
+

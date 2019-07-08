@@ -592,6 +592,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section></section>
 <section><section id="impact-of-tariff-in-simple-model" class="title-slide slide level1"><h1>Impact of Tariff in Simple Model</h1></section><section id="prices-quantities" class="slide level2">
 <h2>Prices &amp; Quantities</h2>
+<p>For a 20% tariff (t = 0.2):</p>
 <table>
 <thead>
 <tr>
@@ -717,10 +718,9 @@ NA
 </tr>
 </tbody>
 </table>
-<p>Welfare effect:</p>
-<p><span class="math inline">\(dW = -M dP_w + \frac{1}{2}(P - P_w) dM =\)</span> 4.11</p>
-<p>Terms of trade effect: <span class="math inline">\(-M dP_w =\)</span> 170.64</p>
-<p>Harberger triangle effect: <span class="math inline">\(\frac{1}{2}(P - P_w) dM =\)</span> -166.52</p>
+<p><small> Welfare effect: <span class="math inline">\(dW = -M dP_w + \frac{1}{2}(P - P_w) dM =\)</span> 4.11<br />
+Terms of trade effect: <span class="math inline">\(-M dP_w =\)</span> 170.64<br />
+Harberger triangle effect: <span class="math inline">\(\frac{1}{2}(P - P_w) dM =\)</span> -166.52 </small></p>
 </section><section id="how-accurate-is-the-approximation" class="slide level2">
 <h2>How Accurate is the approximation?</h2>
 <p>Total differential above implies <span class="math inline">\(dW =\)</span> 4.11</p>
@@ -746,6 +746,9 @@ NA
 <p>The solution to the non-linear equation gives <span class="math inline">\(P_w^1 =\)</span> 0.9686.</p>
 <p>The approximation yields 1-step value of <span class="math inline">\(P_w^{1s} =\)</span> 0.9702 and a 4-step value of <span class="math inline">\(P_w^{4s} =\)</span> 0.9688.</p>
 <p>The 1-step estimate is off by 0.16% and the 4-step by 0.02%</p>
+</section><section id="recall-newtons-method" class="slide level2">
+<h2>Recall Newton’s Method</h2>
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-9-1.png" width="768" /></p>
 </section><section id="what-about-trumpian-tariffs" class="slide level2">
 <h2>What about Trumpian Tariffs?</h2>
 <p>Let’s try a 100% tariff in the simple model…</p>
@@ -753,7 +756,7 @@ NA
 <p>The resulting domestic price is $1.55 which is just below the $1.59 price with no trade.</p>
 <p>The approximation yields 1-step value of <span class="math inline">\(P_{trump}^{1s} =\)</span> 0.8510 and a 4-step value of <span class="math inline">\(P_{trump}^{4s} =\)</span> 0.7788.</p>
 <p>The 1-step is off by 10.14% and the 4-step by 0.79%</p>
-<p>So, perhaps be cautious when using linear approximations… or, take small steps…</p>
+<p>So, be cautious when using linear approximations… and take small steps…</p>
 </section></section>
 <section><section id="global-simulation-analysis-of-industry-level-trade-policy-gsim" class="title-slide slide level1"><h1>Global Simulation Analysis of Industry-Level Trade Policy (GSIM)</h1></section><section id="intro-to-gsim" class="slide level2">
 <h2>Intro to GSIM</h2>
@@ -811,9 +814,6 @@ P_{RW}
 \right)
 \]</span></p>
 <p>We can use a multi-dimensional version of Newton’s Method to improve a price vector…</p>
-</section><section id="recall-newtons-method" class="slide level2">
-<h2>Recall Newton’s Method</h2>
-<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-10-1.png" width="768" /></p>
 </section><section id="the-jacobian" class="slide level2">
 <h2>The Jacobian</h2>
 <p><small> <span class="math display">\[J( \mathbf{P}) =
@@ -844,6 +844,9 @@ F(\cdots,P_j + h,\cdots) - F(P)\text{, finite difference} \\
 </section></section>
 <section><section id="simulation-results" class="title-slide slide level1"><h1>Simulation Results</h1></section><section id="benchmark-case" class="slide level2">
 <h2>Benchmark Case</h2>
+<table>
+<tr>
+<td>
 <table>
 <caption>
 Trade Flows
@@ -937,7 +940,8 @@ RW
 </tr>
 </tbody>
 </table>
-<p><small>and</small></p>
+</td>
+<td>
 <table>
 <caption>
 Tariffs
@@ -1030,6 +1034,9 @@ RW
 </td>
 </tr>
 </tbody>
+</table>
+</td>
+</tr>
 </table>
 </section></section>
 <section><section id="us-eu-bilateral-agreement" class="title-slide slide level1"><h1>US-EU Bilateral Agreement</h1></section><section id="revised-tariffs-us-eu" class="slide level2">

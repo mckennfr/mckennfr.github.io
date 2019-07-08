@@ -129,7 +129,7 @@ $\alpha =$ `r par_alpha`, $\beta =$ `r par_beta`, $\gamma =$ `r par_gamma`,
 
 $\eta =$ `r par_eta`, $\epsilon =$ `r par_epsilon` and $\theta =$ `r par_theta` 
 
-Ignoring tariffs for now...
+Ignoring tariffs for now... 
 
 This implies $P_0 =$ `r round(p0,2)` and $Q_0 =$ `r round(q0,2)`
 
@@ -311,6 +311,8 @@ print(plt4)
 
 ## Prices \& Quantities
 
+For a 20% tariff (t = 0.2):
+
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 # tariff equilibrium
 t <- 0.2
@@ -356,14 +358,12 @@ dTariffs <- (p1 - pw1) * q1_i
 p1_s <- 0.8 + 0.2 * par_theta * par_gamma / ((par_epsilon - par_eta) * par_beta + (par_theta - par_eta) * par_gamma)
 ```
 
-Welfare effect:
 
-$dW = -M dP_w + \frac{1}{2}(P - P_w) dM =$ `r round(TTE + HTE, 2)`
-
-Terms of trade effect: $-M dP_w =$ `r round(TTE,2)`
-
+<small>
+Welfare effect: $dW = -M dP_w + \frac{1}{2}(P - P_w) dM =$ `r round(TTE + HTE, 2)`  
+Terms of trade effect: $-M dP_w =$ `r round(TTE,2)`  
 Harberger triangle effect: $\frac{1}{2}(P - P_w) dM =$ `r round(HTE,2)`
-
+</small>
 
 ## How Accurate is the approximation?
 
@@ -485,6 +485,52 @@ The approximation yields 1-step value of $P_w^{1s} =$ `r format(round(pw1s,4),ns
 
 The 1-step estimate is off by `r format(round((pw1s - pw1) / pw1 * 100,2),nsmall=2)`% and the 4-step by `r format(round((pw14s - pw1) / pw1 * 100,2),nsmall=2)`% 
 
+## Recall Newton's Method
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+a <- 0.25
+b <- -1
+c <- 3
+d <- -1
+
+x <- seq(-1, 3, 0.1)
+y <- a * (x - b)^c + d
+
+x00 <- b + (-d/a)^(1/c)
+
+x0 <- 2
+y0 <-  a * (x0 - b)^c + d
+
+dydx <- c * a * (x0 - b)^(c-1)
+
+yint <- y0 - dydx * x0
+
+y1 <- 0
+x1 <- x0 + (y1 - y0) / dydx
+
+x2 <- 0.98 * x0
+y2 <- 0.9 * y0 + dydx * (x2 - x0)
+
+x3 <- 1.1 * x1
+y3 <- 0.9 * y0 + dydx * (x3 - x0)
+
+
+df <- data.frame(x = x, y = y)
+plt <- ggplot(df, aes(x,y)) + 
+  geom_line(size=1.2) + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_abline(intercept = yint, slope = dydx) + 
+  annotate("segment", x = 0, xend = x0, y = y0, yend = y0, linetype = 2) +
+  annotate("segment", x = x0, xend = x0, y = y0, yend = 0, linetype = 2) +
+  geom_point(data=data.frame(x=c(x00, x1, x0, x0), y=c(0,0,0,y0)), size=1.5, color="red") +
+  annotate("text", x = x0, y=0.5, label="x[0]", parse=TRUE) +
+  annotate("text", x = x1, y=0.5, label="x[1]", parse=TRUE) +
+  annotate("text", x = x00, y=0.5, label="x*", parse=FALSE) + 
+  annotate("segment", x= x2, xend = x3, y = y2, yend = y3, arrow=arrow(length = unit(0.2, "cm")))
+plt
+
+```
 
 ## What about Trumpian Tariffs?
 
@@ -535,7 +581,7 @@ The approximation yields 1-step value of $P_{trump}^{1s} =$ `r format(round(ptru
 
 The 1-step is off by `r format(round((ptrump1s - ptrump) / ptrump * 100,2),nsmall=2)`% and the 4-step by `r format(round((ptrump4s - ptrump) / ptrump * 100,2),nsmall=2)`%
 
-So, perhaps be cautious when using linear approximations... or, take small steps...
+So, be cautious when using linear approximations... and take small steps...
 
 # Global Simulation Analysis of Industry-Level Trade Policy (GSIM) 
 
@@ -611,52 +657,6 @@ $$
 
 We can use a multi-dimensional version of Newton's Method to improve a price vector...
 
-## Recall Newton's Method
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-a <- 0.25
-b <- -1
-c <- 3
-d <- -1
-
-x <- seq(-1, 3, 0.1)
-y <- a * (x - b)^c + d
-
-x00 <- b + (-d/a)^(1/c)
-
-x0 <- 2
-y0 <-  a * (x0 - b)^c + d
-
-dydx <- c * a * (x0 - b)^(c-1)
-
-yint <- y0 - dydx * x0
-
-y1 <- 0
-x1 <- x0 + (y1 - y0) / dydx
-
-x2 <- 0.98 * x0
-y2 <- 0.9 * y0 + dydx * (x2 - x0)
-
-x3 <- 1.1 * x1
-y3 <- 0.9 * y0 + dydx * (x3 - x0)
-
-
-df <- data.frame(x = x, y = y)
-plt <- ggplot(df, aes(x,y)) + 
-  geom_line(size=1.2) + 
-  geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0) +
-  geom_abline(intercept = yint, slope = dydx) + 
-  annotate("segment", x = 0, xend = x0, y = y0, yend = y0, linetype = 2) +
-  annotate("segment", x = x0, xend = x0, y = y0, yend = 0, linetype = 2) +
-  geom_point(data=data.frame(x=c(x00, x1, x0, x0), y=c(0,0,0,y0)), size=1.5, color="red") +
-  annotate("text", x = x0, y=0.5, label="x[0]", parse=TRUE) +
-  annotate("text", x = x1, y=0.5, label="x[1]", parse=TRUE) +
-  annotate("text", x = x00, y=0.5, label="x*", parse=FALSE) + 
-  annotate("segment", x= x2, xend = x3, y = y2, yend = y3, arrow=arrow(length = unit(0.2, "cm")))
-plt
-
-```
 
 
 ## The Jacobian
@@ -781,6 +781,9 @@ calcEqm <- function(x0, phi, eqn2, eqn3, dT) {
 
 ## Benchmark Case
 
+<table>
+<tr>
+<td>
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 # elasticities
 Em <- c(US = -1.25, JP = -1.25, EU = -1.25, RW = -1.25) # import demand
@@ -811,12 +814,11 @@ colnames(T0)  <- c("US", "JP", "EU", "RW")
 
 kable(M, caption = "Trade Flows")
 ```
-
-<small>and</small>
-
+</td><td>
 ```{r echo=FALSE,warning=FALSE, message=FALSE}
 kable(T0, caption = "Tariffs")
 ```
+</td></tr></table>
 
 # US-EU Bilateral Agreement
 

@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Shahzia Teja" />
+  <meta name="dcterms.date" content="2019-07-09" />
+  <title>Modelling Trade</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="Ontario_Trade_Model3_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; } /* Alert */
+code span.an { color: #008000; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #0000ff; } /* ControlFlow */
+code span.ch { color: #008080; } /* Char */
+code span.cn { } /* Constant */
+code span.co { color: #008000; } /* Comment */
+code span.cv { color: #008000; } /* CommentVar */
+code span.do { color: #008000; } /* Documentation */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.im { } /* Import */
+code span.in { color: #008000; } /* Information */
+code span.kw { color: #0000ff; } /* Keyword */
+code span.op { } /* Operator */
+code span.ot { color: #ff4000; } /* Other */
+code span.pp { color: #ff4000; } /* Preprocessor */
+code span.sc { color: #008080; } /* SpecialChar */
+code span.ss { color: #008080; } /* SpecialString */
+code span.st { color: #008080; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #008080; } /* VerbatimString */
+code span.wa { color: #008000; font-weight: bold; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="Ontario_Trade_Model3_files/reveal.js-3.3.0.1/css/theme/beige.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="style.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    <link href="Ontario_Trade_Model3_files/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+    <link href="Ontario_Trade_Model3_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Modelling Trade</h1>
+  <h1 class="subtitle">A Partial Equilibrium Approach</h1>
+    <h2 class="author">Shahzia Teja</h2>
+    <h3 class="date">July 9, 2019</h3>
+</section>
+
+<section><section id="ceteris-paribus" class="title-slide slide level1" data-background-iframe="https://vi.unctad.org/tpa/web/vol1/vol1home.html"><h1>Ceteris Paribus</h1></section><section id="partial-equilibrium-for-trade-regional-analysis" class="slide level2">
+<h2>Partial Equilibrium for Trade &amp; Regional Analysis</h2>
+<p>Partial Equilibrium models allow us to examine the effects of economic shocks in a parsimonious modelling environment with few data requirements or assumptions.</p>
+<p>In this world, a specific market clears without regard to prices and quantity changes in other markets. In other words, all other prices, quantities and income are assumed to be fixed. Some of the advantages of this approach are obvious, including the ability to create and run models quickly, as well as producing intuitively appealing results.</p>
+</section><section id="tariffs-as-a-shock" class="slide level2">
+<h2>Tariffs as a Shock</h2>
+<p>When countries impose trade barriers, in this case in the form of tariffs, prices and quantities of implicated goods can be expected to respond.</p>
+<p>We assume a large open economy with downward sloping import demand curves (this implies the country’s demand affects prices). In general, an importing country is assumed to have prices above the world price, since the alternative would imply no trade takes place. Buyers are assumed to be indifferent between domestic and foreign-produced substitutes.</p>
+</section></section>
+<section><section id="simplest-partial-equilibrium-model" class="title-slide slide level1"><h1>Simplest Partial Equilibrium Model</h1></section><section id="system-functions" class="slide level2">
+<h2>System Functions</h2>
+<p>Domestic Demand: <span class="math inline">\(Q_d=\alpha P^\eta\)</span></p>
+<p>Domestic Supply: <span class="math inline">\(Q_s=\beta P^\epsilon\)</span></p>
+<p>Import Demand (the excess of domestic demand over domestic supply): <span class="math inline">\(M_d=\alpha P^\eta-\beta P^\epsilon\)</span></p>
+<p>Import Supply: <span class="math inline">\(M_s=\gamma P_w^\theta\)</span></p>
+<p>Internal Price: <span class="math inline">\(P=(1+t) P_w\)</span></p>
+</section><section id="autarky" class="slide level2">
+<h2>Autarky</h2>
+<p>Without imports, domestic demand equals domestic supply.</p>
+<p><span class="math inline">\(Q_d = Q_s\)</span> or <span class="math inline">\(\alpha P^\eta = \beta P^\epsilon\)</span></p>
+<p>which implies <span class="math inline">\(\alpha / \beta = P^{\epsilon - \eta}\)</span></p>
+<p>This can be solved for: <span class="math display">\[P_0 = (\alpha / \beta) ^ \frac{1}{\epsilon - \eta}\]</span> <span class="math display">\[Q_0 = \alpha P_0^\eta = \alpha (\alpha / \beta) ^ \frac{\eta}{\epsilon - \eta} = \alpha ^ \frac{\epsilon}{\epsilon - \eta} \beta ^ \frac{-\eta}{\epsilon - \eta}\]</span></p>
+</section><section id="free-trade" class="slide level2">
+<h2>Free Trade</h2>
+<p>In this case, import demand equals import supply…</p>
+<p><span class="math inline">\(M_d = M_s\)</span> or <span class="math inline">\(\alpha P^\eta - \beta P^\epsilon = \gamma P_w^\theta\)</span></p>
+<p>but <span class="math inline">\(P = (1 + t) P_w\)</span> which implies:</p>
+<p><span class="math inline">\(\alpha (1 + t)^\eta P_w^\eta - \beta (1 + t)^\epsilon P_w^\epsilon = \gamma P_w^\theta\)</span></p>
+</section><section id="autarky-illustrated" class="slide level2">
+<h2>Autarky Illustrated</h2>
+<p>Suppose:</p>
+<p><span class="math inline">\(\alpha =\)</span> 7480.06, <span class="math inline">\(\beta =\)</span> 1182.38, <span class="math inline">\(\gamma =\)</span> 6297.68,</p>
+<p><span class="math inline">\(\eta =\)</span> -1, <span class="math inline">\(\epsilon =\)</span> 3 and <span class="math inline">\(\theta =\)</span> 10</p>
+<p>Ignoring tariffs for now…</p>
+<p>This implies <span class="math inline">\(P_0 =\)</span> 1.59 and <span class="math inline">\(Q_0 =\)</span> 4716.48</p>
+<p>Whereas in the benchmark case,</p>
+<p><span class="math inline">\(P^* = P_w = 1\)</span> and <span class="math inline">\(Q^* = Q_{Domestic} + Q_{Imported}\)</span></p>
+<p>= 1182.38 + 6297.68 = 7480.06</p>
+</section><section class="slide level2">
+
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-2-1.png" width="768" /></p>
+</section><section id="impact-of-moving-from-autarky-to-free-trade" class="slide level2">
+<h2>Impact of Moving from Autarky to Free Trade</h2>
+<p>Using demand and supply curves defined above, price falls from <span class="math inline">\(P_0\)</span> = 1.59 to <span class="math inline">\(P_w\)</span> = 1</p>
+</section><section id="consumer-surplus" class="slide level2">
+<h2>Consumer Surplus</h2>
+<p><span class="math inline">\(\Delta CS = -\int_{P_0}^{P_w} Q_d(u) du\)</span></p>
+<p>but <span class="math inline">\(p_w\)</span> &lt; <span class="math inline">\(p_0\)</span>, so,</p>
+<p><span class="math inline">\(\Delta CS = -\int_{P_w}^{P_0} -Q_d(u) du = \alpha \int_{P_w}^{P_0} u^\eta du\)</span></p>
+<p>if <span class="math inline">\(\eta \neq -1\)</span>, this equals <span class="math inline">\(\alpha \left[\frac{u^{\eta + 1}}{\eta + 1}\right]_{P_w}^{P_0}\)</span></p>
+<p>if <span class="math inline">\(\eta = -1\)</span>, this equals <span class="math inline">\(\alpha \left[\ln u \right]_{P_w}^{P_0}\)</span></p>
+<p>In this case, <span class="math inline">\(\Delta CS =\)</span> 3449.64</p>
+</section><section class="slide level2">
+
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-3-1.png" width="768" /></p>
+</section><section id="producer-surplus" class="slide level2">
+<h2>Producer Surplus</h2>
+<p><span class="math inline">\(\Delta PS = \int_{P_0}^{P_w} Q_s(u) du\)</span></p>
+<p>but <span class="math inline">\(p_w\)</span> &lt; <span class="math inline">\(p_0\)</span>, so,</p>
+<p><span class="math inline">\(\Delta PS = -\int_{P_w}^{P_0} Q_s(u) du = -\beta \int_{P_w}^{P_0} u^\epsilon du\)</span></p>
+<p>Since <span class="math inline">\(\epsilon &gt; 0\)</span>, this equals <span class="math inline">\(-\beta \left[\frac{u^{\epsilon + 1}}{\epsilon + 1} \right]_{P_w}^{P_0}\)</span></p>
+<p>In this case, <span class="math inline">\(\Delta PS =\)</span> -1574.42</p>
+</section><section class="slide level2">
+
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-4-1.png" width="768" /></p>
+</section><section id="net-change-in-welfare" class="slide level2">
+<h2>Net Change in Welfare</h2>
+<p>In this case we have <span class="math inline">\(\Delta CS + \Delta PS &gt; 0\)</span></p>
+<p>In fact, <span class="math inline">\(\Delta CS + \Delta PS =\)</span> 1875.22</p>
+</section><section class="slide level2">
+
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-5-1.png" width="768" /></p>
+</section></section>
+<section><section id="impact-of-tariff-in-simple-model" class="title-slide slide level1"><h1>Impact of Tariff in Simple Model</h1></section><section id="prices-quantities" class="slide level2">
+<h2>Prices &amp; Quantities</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Variables
+</th>
+<th style="text-align:left;">
+Before
+</th>
+<th style="text-align:left;">
+After
+</th>
+<th style="text-align:left;">
+Change
+</th>
+<th style="text-align:left;">
+Percent
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pw
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+<td style="text-align:left;">
+0.969
+</td>
+<td style="text-align:left;">
+-0.031
+</td>
+<td style="text-align:left;">
+-3.14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+<td style="text-align:left;">
+1.162
+</td>
+<td style="text-align:left;">
+0.162
+</td>
+<td style="text-align:left;">
+16.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Md
+</td>
+<td style="text-align:left;">
+6297.68
+</td>
+<td style="text-align:left;">
+4578.51
+</td>
+<td style="text-align:left;">
+-1719.17
+</td>
+<td style="text-align:left;">
+-27.30
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Qs
+</td>
+<td style="text-align:left;">
+1182.38
+</td>
+<td style="text-align:left;">
+1856.80
+</td>
+<td style="text-align:left;">
+674.42
+</td>
+<td style="text-align:left;">
+57.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Qd
+</td>
+<td style="text-align:left;">
+7480.06
+</td>
+<td style="text-align:left;">
+6435.31
+</td>
+<td style="text-align:left;">
+-1044.75
+</td>
+<td style="text-align:left;">
+-13.97
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tariffs
+</td>
+<td style="text-align:left;">
+0.00
+</td>
+<td style="text-align:left;">
+886.97
+</td>
+<td style="text-align:left;">
+886.97
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+<p>Welfare effect:</p>
+<p><span class="math inline">\(dW = -M dP_w + \frac{1}{2}(P - P_w) dM =\)</span> 4.11</p>
+<p>Terms of trade effect: <span class="math inline">\(-M dP_w =\)</span> 170.64</p>
+<p>Harberger triangle effect: <span class="math inline">\(\frac{1}{2}(P - P_w) dM =\)</span> -166.52</p>
+</section><section id="how-accurate-is-the-approximation" class="slide level2">
+<h2>How Accurate is the approximation?</h2>
+<p>Total differential above implies <span class="math inline">\(dW =\)</span> 4.11</p>
+<p>Comparing areas suggests:</p>
+<p><span class="math inline">\(\Delta CS = \alpha \left[ \ln u \right]_{P_w}^{P_1} =\)</span> -1125.31</p>
+<p><span class="math inline">\(\Delta PS = \frac{\beta}{\epsilon + 1} \left[ u^{\epsilon + 1} \right]_{P_w}^{P_1} =\)</span> 243.96</p>
+<p><span class="math inline">\(\Delta Tariffs = (P_w^1 - P_w) M =\)</span> 886.97</p>
+<p><span class="math inline">\(\Delta W =\)</span> 5.63</p>
+</section><section class="slide level2">
+
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-7-1.png" width="768" /></p>
+</section></section>
+<section><section id="assumptions" class="title-slide slide level1"><h1>Assumptions</h1></section><section id="linear-or-non-linear" class="slide level2">
+<h2>Linear or Non-linear?</h2>
+<p><small> From above, equilibrium occurs at the root of <span class="math inline">\(f(P_w, t) = \alpha (1 + t)^\eta P_w^\eta - \beta (1 + t)^\epsilon P_w^\epsilon - \gamma P_w^\theta\)</span></p>
+<p>We can observe that <span class="math inline">\(\frac{\partial f(P_w,t)}{\partial P_w} = \eta \alpha (1 + t)^\eta P_w^{\eta-1} - \epsilon \beta (1 + t)^\epsilon P_w^{\epsilon-1} - \theta \gamma P_w^{\theta-1}\)</span> and <span class="math inline">\(\frac{\partial f(P_w,t)}{\partial t} = \eta \alpha (1 + t)^{\eta-1} P_w^\eta-1 - \epsilon \beta (1 + t)^{\epsilon-1} P_w^\epsilon\)</span></p>
+<p>So, a linear approximation (a plane) is given by <span class="math inline">\(\hat{f}(P_w, t) = f(P_w^0,t^0) + \frac{\partial f(P_w^0,t^0)}{\partial P_w}(P_w - P_w^0) + \frac{\partial f(P_w^0,t^0)}{\partial t}(t - t^0)\)</span></p>
+<p><span class="math inline">\(\hat{f}(P_w,t)\)</span> should be close to <span class="math inline">\(f(P_w, t)\)</span> near <span class="math inline">\((P_w^0,t^0)\)</span></p>
+<p>Is the solution of <span class="math inline">\(\hat{f}(P_w,t) = 0\)</span> close to <span class="math inline">\(f(P_w, t) = 0\)</span>? </small></p>
+</section><section id="using-the-linear-approximation" class="slide level2">
+<h2>Using the Linear Approximation</h2>
+<p><span class="math inline">\(\hat{f}(P_w,t) = 0\)</span> implies that <span class="math inline">\(P_w = P_w^0 - \frac{f(P_w^0,t^0)}{\frac{\partial f}{\partial P_w}(P_w^0,t^0)} - \frac{\frac{\partial f}{\partial t}(P_w^0,t^0)}{\frac{\partial f}{\partial t}(P_w^0,t^0)}(t - t^0)\)</span></p>
+<p>The solution to the non-linear equation gives <span class="math inline">\(P_w^1 =\)</span> 0.9686.</p>
+<p>The approximation yields 1-step value of <span class="math inline">\(P_w^{1s} =\)</span> 0.9702 and a 4-step value of <span class="math inline">\(P_w^{4s} =\)</span> 0.9688.</p>
+<p>The 1-step estimate is off by 0.16% and the 4-step by 0.02%</p>
+</section><section id="what-about-trumpian-tariffs" class="slide level2">
+<h2>What about Trumpian Tariffs?</h2>
+<p>Let’s try a 100% tariff in the simple model…</p>
+<p>The non-linear solution gives the new world price <span class="math inline">\(P_{trump} =\)</span> 0.7726.</p>
+<p>The resulting domestic price is $1.55 which is just below the $1.59 price with no trade.</p>
+<p>The approximation yields 1-step value of <span class="math inline">\(P_{trump}^{1s} =\)</span> 0.8510 and a 4-step value of <span class="math inline">\(P_{trump}^{4s} =\)</span> 0.7788.</p>
+<p>The 1-step is off by 10.14% and the 4-step by 0.79%</p>
+<p>So, perhaps be cautious when using linear approximations… or, take small steps…</p>
+</section></section>
+<section><section id="global-simulation-analysis-of-industry-level-trade-policy-gsim" class="title-slide slide level1"><h1>Global Simulation Analysis of Industry-Level Trade Policy (GSIM)</h1></section><section id="intro-to-gsim" class="slide level2">
+<h2>Intro to GSIM</h2>
+<p><small> GSIM is a widely used modelling strategy for the partial equilibrium analysis of global trade policy changes developed by Joseph Francois and H. Keith Hall.</p>
+<p>GSIM is a static, deterministic, single commodity bilateral trade model driven by export supply and bilateral import demand equations. Imports and exports are assumed to be a function of the world price after taking into account relevant bilateral trade taxes or subsidies. Since tariffs are bilateral and differ from country to country, changes in tariffs lead to changes in relative prices that drive differential changes in imports from various sources. Elasticities of substitution (Armington elasticities) determine the extent to which changes in relative prices lead to switches in the source of imports.</p>
+<p>The model solves numerically to find market clearing prices such that global imports equate to global exports.</p>
+<p>Francois and Hall provide 4x4 and 25x25 Excel based calculators with linearized versions of the model. We have ported a generalized version of those models to the <em>R</em> software environment for statistical computing and graphics. </small></p>
+</section><section id="gsim-limitations" class="slide level2">
+<h2>GSIM Limitations</h2>
+<p>Because the partial equilibrium approach ignores other products that may be substitutes in consumption or production, losses and gains are potentially overestimated, as transfers of resources to or from other sectors are ignored. However, the approach has the useful advantage of allowing for a relatively rapid and transparent analysis of a wide range of trade policy issues with a minimum of data and computational requirements.</p>
+<p>GSIM is ideal for preliminary work especially when data availability is limited.</p>
+</section><section id="recent-gsim-example" class="slide level2">
+<h2>Recent GSIM Example</h2>
+<p>In September 2018, the U.S. Department of Agriculture used GSIM to estimate the level of gross trade damage caused by retaliatory tariffs to U.S. agricultural exports by commodity.</p>
+<p>In the model, Chinese import demand for product i coming from the U.S. falls as the result of a retaliatory tariff. The level imported comes from the following equation:</p>
+<p><span class="math inline">\(M_{i,(US,CN)}^\tau = \left[ \frac{ \alpha_{i,(US,CN)} }{ P_{i,(US)}^*(1+\tau_{i,(US,CN)})} \right]^\sigma P_{i,(CN)}^{\sigma - 1} E_{i,(CN)}\)</span></p>
+</section></section>
+<section><section id="working-with-gsim" class="title-slide slide level1"><h1>Working with GSIM</h1></section><section id="solution-methods" class="slide level2">
+<h2>Solution Methods</h2>
+<p>Choose export prices for each region so that global demand equals global supply.</p>
+<p><span class="math display">\[
+F(\mathbf P) =
+F \left( 
+\begin{matrix}
+P_{US}\\
+P_{JP}\\
+P_{EU}\\
+P_{RW}
+\end{matrix}
+\right) =
+\left(
+\begin{matrix}
+F_{US}\\
+F_{JP}\\
+F_{EU}\\
+F_{RW}
+\end{matrix}
+\right)
+\left(
+\begin{matrix}
+P_{US}\\
+P_{JP}\\
+P_{EU}\\
+P_{RW}
+\end{matrix}
+\right)
+=
+\left(
+\begin{matrix}
+0\\
+0\\
+0\\
+0\\
+\end{matrix}
+\right)
+\]</span></p>
+<p>We can use a multi-dimensional version of Newton’s Method to improve a price vector…</p>
+</section><section id="recall-newtons-method" class="slide level2">
+<h2>Recall Newton’s Method</h2>
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-10-1.png" width="768" /></p>
+</section><section id="the-jacobian" class="slide level2">
+<h2>The Jacobian</h2>
+<p><small> <span class="math display">\[J( \mathbf{P}) =
+\left. 
+\left[ 
+\begin{matrix}
+\frac{\partial F_{US}}{\partial P_{US}}  &amp;&amp; \frac{\partial F_{US}}{\partial P_{JP}} &amp;&amp; \cdots &amp;&amp; \frac{\partial F_{US}}{\partial P_{RW}}\\
+\frac{\partial F_{JP}}{\partial P_{US}}  &amp;&amp; \frac{\partial F_{JP}}{\partial P_{JP}} &amp;&amp; \cdots &amp;&amp; \frac{\partial F_{JP}}{\partial P_{RW}}\\
+\frac{\partial F_{EU}}{\partial P_{US}}  &amp;&amp; \frac{\partial F_{EU}}{\partial P_{JP}} &amp;&amp; \cdots &amp;&amp; \frac{\partial F_{EU}}{\partial P_{RW}}\\
+\frac{\partial F_{RW}}{\partial P_{US}}  &amp;&amp; \frac{\partial F_{RW}}{\partial P_{JP}} &amp;&amp; \cdots &amp;&amp; \frac{\partial F_{RW}}{\partial P_{RW}}\\
+\end{matrix}
+\right] \;
+\right\rvert_{\mathbf{P}=P_0} 
+\]</span></small></p>
+<p>with</p>
+<p><small> <span class="math display">\[J_{ij} = \partial F_i / \partial P_j \approx 
+\begin{cases}
+(F(\cdots,P_j + h,\cdots) - F(P))/h\text{, difference quotient, or}\\
+F(\cdots,P_j + h,\cdots) - F(P)\text{, finite difference} \\
+\end{cases}\]</span> </small></p>
+</section><section id="follow-the-yellow-brick-jacobian-road" class="slide level2">
+<h2>Follow the Yellow Brick (<em>Jacobian</em>) Road</h2>
+<p>A first order approximation to F around <span class="math inline">\(P_0\)</span> is given by</p>
+<p><span class="math inline">\(F(\mathbf{P}) = F(\mathbf{P_0}) + J(\mathbf{P_0}) \mathbf{dP}\)</span></p>
+<p>As in the simple model above, we can solve for the price change that makes <span class="math inline">\(F(\mathbf{P}) = \mathbf{0}\)</span> as follows</p>
+<p><span class="math inline">\(\mathbf{dP} = -J^{-1}(\mathbf{P_0}) F(\mathbf{P_0})\)</span></p>
+<p>So, take a step along <span class="math inline">\(\mathbf{dP}\)</span> and evaluate again…</p>
+</section></section>
+<section><section id="simulation-results" class="title-slide slide level1"><h1>Simulation Results</h1></section><section id="benchmark-case" class="slide level2">
+<h2>Benchmark Case</h2>
+<table>
+<caption>
+Trade Flows
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+300
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+</tbody>
+</table>
+<p><small>and</small></p>
+<table>
+<caption>
+Tariffs
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.21
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+1.37
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.31
+</td>
+<td style="text-align:right;">
+1.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+1.32
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+1.57
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+1.15
+</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section><section id="us-eu-bilateral-agreement" class="title-slide slide level1"><h1>US-EU Bilateral Agreement</h1></section><section id="revised-tariffs-us-eu" class="slide level2">
+<h2>Revised Tariffs US-EU</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">T1 &lt;-<span class="st"> </span>T0</a>
+<a class="sourceLine" id="cb1-2" title="2"></a>
+<a class="sourceLine" id="cb1-3" title="3">T1[<span class="st">&quot;EU&quot;</span>,<span class="st">&quot;US&quot;</span>] &lt;-<span class="st"> </span>T1[<span class="st">&quot;US&quot;</span>,<span class="st">&quot;EU&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># US-EU trade agreement</span></a></code></pre></div>
+<table>
+<caption>
+Revised Tariffs
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.21
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+1.37
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.31
+</td>
+<td style="text-align:right;">
+1.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+1.57
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+1.15
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="equilibrium-prices-us-eu" class="slide level2">
+<h2>Equilibrium Prices US-EU</h2>
+<p>P = ( 0.0792, -0.0316, 0.0480, -0.0184)<sup>T</sup></p>
+</section><section id="change-in-trade-flows-us-eu" class="slide level2">
+<h2>Change in Trade Flows US-EU</h2>
+<table>
+<caption>
+Impact of US-EU Tariff Elimination
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+-12.16680
+</td>
+<td style="text-align:right;">
+185.86573
+</td>
+<td style="text-align:right;">
+-59.652142
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+-95.96956
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+-21.02917
+</td>
+<td style="text-align:right;">
+51.079077
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+218.22377
+</td>
+<td style="text-align:right;">
+-10.20246
+</td>
+<td style="text-align:right;">
+-97.38968
+</td>
+<td style="text-align:right;">
+-11.762546
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+-12.29562
+</td>
+<td style="text-align:right;">
+16.70691
+</td>
+<td style="text-align:right;">
+-21.28058
+</td>
+<td style="text-align:right;">
+4.150849
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-changes-us-eu" class="slide level2">
+<h2>Welfare Changes US-EU</h2>
+<table>
+<caption>
+Impact of Tariff Changes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Region
+</th>
+<th style="text-align:left;">
+ProducerSurplus
+</th>
+<th style="text-align:left;">
+ConsumerSurplus
+</th>
+<th style="text-align:left;">
+TariffRevenue
+</th>
+<th style="text-align:left;">
+NetWelfare
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+United States
+</td>
+<td style="text-align:left;">
+46.1
+</td>
+<td style="text-align:left;">
+110.6
+</td>
+<td style="text-align:left;">
+-138.5
+</td>
+<td style="text-align:left;">
+18.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Japan
+</td>
+<td style="text-align:left;">
+-26.2
+</td>
+<td style="text-align:left;">
+-8.9
+</td>
+<td style="text-align:left;">
+0.6
+</td>
+<td style="text-align:left;">
+-34.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+European Union
+</td>
+<td style="text-align:left;">
+39.8
+</td>
+<td style="text-align:left;">
+68.6
+</td>
+<td style="text-align:left;">
+-93.8
+</td>
+<td style="text-align:left;">
+14.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rest of World
+</td>
+<td style="text-align:left;">
+-5.1
+</td>
+<td style="text-align:left;">
+-32.9
+</td>
+<td style="text-align:left;">
+-2.9
+</td>
+<td style="text-align:left;">
+-40.8
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-effects-us-eu" class="slide level2">
+<h2>Welfare Effects US-EU</h2>
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-19-1.png" width="768" /></p>
+</section></section>
+<section><section id="us-jp-bilateral-agreement" class="title-slide slide level1"><h1>US-JP Bilateral Agreement</h1></section><section id="revised-tariffs-us-jp" class="slide level2">
+<h2>Revised Tariffs US-JP</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">T1 &lt;-<span class="st"> </span>T0</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3">T1[<span class="st">&quot;JP&quot;</span>,<span class="st">&quot;US&quot;</span>] &lt;-<span class="st"> </span>T1[<span class="st">&quot;US&quot;</span>,<span class="st">&quot;JP&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># US-EU trade agreement</span></a></code></pre></div>
+<table>
+<caption>
+Revised Tariffs US-JP
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.31
+</td>
+<td style="text-align:right;">
+1.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+1.32
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+1.57
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+1.15
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="equilibrium-prices-us-jp" class="slide level2">
+<h2>Equilibrium Prices US-JP</h2>
+<p>P = ( 0.0241, 0.0897, -0.0201, -0.0138)<sup>T</sup></p>
+</section><section id="change-in-trade-flows-us-jp" class="slide level2">
+<h2>Change in Trade Flows US-JP</h2>
+<table>
+<caption>
+Impact of US-JP Tariff Elimination
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+31.661720
+</td>
+<td style="text-align:right;">
+-2.43623
+</td>
+<td style="text-align:right;">
+4.379462
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+302.53348
+</td>
+<td style="text-align:right;">
+0.000000
+</td>
+<td style="text-align:right;">
+-45.97850
+</td>
+<td style="text-align:right;">
+-55.605497
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+-102.51001
+</td>
+<td style="text-align:right;">
+-7.095785
+</td>
+<td style="text-align:right;">
+32.35968
+</td>
+<td style="text-align:right;">
+37.484310
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+-18.43224
+</td>
+<td style="text-align:right;">
+-9.615467
+</td>
+<td style="text-align:right;">
+15.19147
+</td>
+<td style="text-align:right;">
+3.277858
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-changes-us-jp" class="slide level2">
+<h2>Welfare Changes US-JP</h2>
+<table>
+<caption>
+Impact of US-JP Tariff Changes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Region
+</th>
+<th style="text-align:left;">
+ProducerSurplus
+</th>
+<th style="text-align:left;">
+ConsumerSurplus
+</th>
+<th style="text-align:left;">
+TariffRevenue
+</th>
+<th style="text-align:left;">
+NetWelfare
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+United States
+</td>
+<td style="text-align:left;">
+13.5
+</td>
+<td style="text-align:left;">
+161.2
+</td>
+<td style="text-align:left;">
+-228.3
+</td>
+<td style="text-align:left;">
+-53.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Japan
+</td>
+<td style="text-align:left;">
+81.4
+</td>
+<td style="text-align:left;">
+14.3
+</td>
+<td style="text-align:left;">
+-17.0
+</td>
+<td style="text-align:left;">
+78.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+European Union
+</td>
+<td style="text-align:left;">
+-15.9
+</td>
+<td style="text-align:left;">
+-18.8
+</td>
+<td style="text-align:left;">
+-11.5
+</td>
+<td style="text-align:left;">
+-46.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rest of World
+</td>
+<td style="text-align:left;">
+-3.8
+</td>
+<td style="text-align:left;">
+-26.3
+</td>
+<td style="text-align:left;">
+-4.6
+</td>
+<td style="text-align:left;">
+-34.7
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-effects-us-jp" class="slide level2">
+<h2>Welfare Effects US-JP</h2>
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-25-1.png" width="768" /></p>
+</section></section>
+<section><section id="us-unilateral-action" class="title-slide slide level1"><h1>US Unilateral Action</h1></section><section id="revised-tariffs-us-alone" class="slide level2">
+<h2>Revised Tariffs US Alone</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">T1 &lt;-<span class="st"> </span>T0</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3">T1[<span class="st">&quot;JP&quot;</span>,<span class="st">&quot;US&quot;</span>] &lt;-<span class="st"> </span>T1[<span class="st">&quot;EU&quot;</span>,<span class="st">&quot;US&quot;</span>] &lt;-<span class="st"> </span>T1[<span class="st">&quot;RW&quot;</span>,<span class="st">&quot;US&quot;</span>] &lt;-<span class="st"> </span><span class="dv">1</span></a></code></pre></div>
+<table>
+<caption>
+Revised Tariffs US Alone
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.21
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.31
+</td>
+<td style="text-align:right;">
+1.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:right;">
+1.15
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="equilibrium-prices-us-alone" class="slide level2">
+<h2>Equilibrium Prices US Alone</h2>
+<p>P = (0.0211, 0.0569, 0.0360, 0.0450)<sup>T</sup></p>
+</section><section id="change-in-trade-flows-us-alone" class="slide level2">
+<h2>Change in Trade Flows US Alone</h2>
+<table>
+<caption>
+Impact of US Tariff Elimination
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+US
+</th>
+<th style="text-align:right;">
+JP
+</th>
+<th style="text-align:right;">
+EU
+</th>
+<th style="text-align:right;">
+RW
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+2.7753352
+</td>
+<td style="text-align:right;">
+11.335004
+</td>
+<td style="text-align:right;">
+15.253006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JP
+</td>
+<td style="text-align:right;">
+159.76192
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+-14.341580
+</td>
+<td style="text-align:right;">
+-20.329371
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EU
+</td>
+<td style="text-align:right;">
+77.53645
+</td>
+<td style="text-align:right;">
+-0.6433381
+</td>
+<td style="text-align:right;">
+-1.049595
+</td>
+<td style="text-align:right;">
+-2.232991
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RW
+</td>
+<td style="text-align:right;">
+42.63517
+</td>
+<td style="text-align:right;">
+-4.4805095
+</td>
+<td style="text-align:right;">
+-4.797034
+</td>
+<td style="text-align:right;">
+-0.991555
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-changes-us-alone" class="slide level2">
+<h2>Welfare Changes US Alone</h2>
+<table>
+<caption>
+Impact of US Tariff Changes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Region
+</th>
+<th style="text-align:left;">
+ProducerSurplus
+</th>
+<th style="text-align:left;">
+ConsumerSurplus
+</th>
+<th style="text-align:left;">
+TariffRevenue
+</th>
+<th style="text-align:left;">
+NetWelfare
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+United States
+</td>
+<td style="text-align:left;">
+11.8
+</td>
+<td style="text-align:left;">
+306.7
+</td>
+<td style="text-align:left;">
+-309.5
+</td>
+<td style="text-align:left;">
+9.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Japan
+</td>
+<td style="text-align:left;">
+50.4
+</td>
+<td style="text-align:left;">
+-12.8
+</td>
+<td style="text-align:left;">
+-1.5
+</td>
+<td style="text-align:left;">
+36.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+European Union
+</td>
+<td style="text-align:left;">
+29.6
+</td>
+<td style="text-align:left;">
+-31.2
+</td>
+<td style="text-align:left;">
+-1.0
+</td>
+<td style="text-align:left;">
+-2.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rest of World
+</td>
+<td style="text-align:left;">
+13.0
+</td>
+<td style="text-align:left;">
+-32.0
+</td>
+<td style="text-align:left;">
+-1.9
+</td>
+<td style="text-align:left;">
+-20.8
+</td>
+</tr>
+</tbody>
+</table>
+</section><section id="welfare-effects-us-only" class="slide level2">
+<h2>Welfare Effects US Only</h2>
+<p><img src="Ontario_Trade_Model3_files/figure-revealjs/unnamed-chunk-31-1.png" width="768" /></p>
+</section></section>
+<section><section id="future-work" class="title-slide slide level1"><h1>Future Work</h1></section><section id="provincial-barriers-to-trade" class="slide level2">
+<h2>Provincial Barriers to Trade</h2>
+<p>Could easily be extended to model 11x11 provinces (including 10 provinces and Rest of World) to look at provincial trade flows.</p>
+<p>Some related work being done internally, and some outside work (Stats Can Hexagon Paper comes to mind) where gravity models suggest that trade flows could potentially be quite a bit higher and are impeded by barriers.</p>
+<p>What would we find if we relaxed some trade barriers?</p>
+</section></section>
+<section id="the-end" class="title-slide slide level1"><h1>The End</h1></section>
+    </div>
+  </div>
+
+  <script src="Ontario_Trade_Model3_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="Ontario_Trade_Model3_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+        // Transition style
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+
+        chalkboard: {
+          toggleNotesButton: true,
+          theme: 'chalkboard',
+        },
+
+        keyboard: {
+          67: function() { RevealChalkboard.toggleNotesCanvas() },    // toggle notes canvas when 'c' is pressed
+          66: function() { RevealChalkboard.toggleChalkboard() }, // toggle chalkboard when 'b' is pressed
+          46: function() { RevealChalkboard.clear() },    // clear chalkboard when 'DEL' is pressed
+           8: function() { RevealChalkboard.reset() },    // reset chalkboard data on current slide when 'BACKSPACE' is pressed
+          68: function() { RevealChalkboard.download() }, // downlad recorded chalkboard drawing when 'd' is pressed
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'Ontario_Trade_Model3_files/reveal.js-3.3.0.1/plugin/chalkboard/chalkboard.js', async: true },
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

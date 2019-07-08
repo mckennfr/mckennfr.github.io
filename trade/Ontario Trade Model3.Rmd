@@ -1,20 +1,22 @@
 ---
 title: "Trade Presentation"
 author: "Shahzia Teja"
-date: "July 8, 2019"
+date: "July 9, 2019"
 output: 
   revealjs::revealjs_presentation:
-    theme: blood
+    theme: beige
+    highlight: haddock
     css: style.css
     self_contained: false
     reveal_plugins: ["chalkboard"]
-reveal_options:
-  slideNumber: true
-  previewLinks: true
-  chalkboard:
-    theme: whiteboard
-    toggleNotesButton: false
-  slide_level: 2
+    reveal_options:
+      chalkboard:
+        theme: chalkboard
+        toggleNotesButton: true
+      slide_level: 2
+      slideNumber: true
+      previewLinks: true
+      progress: true
 ---
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
@@ -23,22 +25,19 @@ library(knitr)
 library(kableExtra)
 library(dplyr)
 library(ggplot2)
-
 ```
 
 # Ceteris Paribus {data-background-iframe="https://vi.unctad.org/tpa/web/vol1/vol1home.html"}
 
-## Partial Equilibrium
+## Partial Equilibrium for Trade \& Regional Analysis
 
-Partial Equilibrium for Trade & Regional Analysis
-
-Partial Equilibrium models allow us to examine the effects of economic shocks in a parsimonious modeling environment with few data requirements or assumptions.
+Partial Equilibrium models allow us to examine the effects of economic shocks in a parsimonious modelling environment with few data requirements or assumptions.
 
 In this world, a specific market clears without regard to prices and quantity changes in other markets. In other words, all other prices, quantities and income are assumed to be fixed. Some of the advantages of this approach are obvious, including the ability to create and run models quickly, as well as producing intuitively appealing results.
 
 ## Tariffs as a Shock
 
-When countries impose trade barriers, in this case in the form of tarrifs, prices and quantities of implicated goods can be expected to respond.
+When countries impose trade barriers, in this case in the form of tariffs, prices and quantities of implicated goods can be expected to respond.
 
 We assume a large open economy with downward sloping import demand curves (this implies the country's demand affects prices). In general, an importing country is assumed to have prices above the world price, since the alternative would imply no trade takes place. Buyers are assumed to be indifferent between domestic and foreign-produced substitutes.
 
@@ -46,15 +45,15 @@ We assume a large open economy with downward sloping import demand curves (this 
 
 ## System Functions
 
-Domestic Demand: $Q_d=\alpha(P)^\eta$
+Domestic Demand: $Q_d=\alpha P^\eta$
 
-Domestic Supply: $Q_s=\beta(P)^\epsilon$
+Domestic Supply: $Q_s=\beta P^\epsilon$
 
-Import Demand (the excess of domestic demand over domestic supply): $M_d=\alpha(P)^\eta-\beta(P)^\epsilon$
+Import Demand (the excess of domestic demand over domestic supply): $M_d=\alpha P^\eta-\beta P^\epsilon$
 
-Import Supply: $M_s=Y(P_w)^\theta$
+Import Supply: $M_s=\gamma P_w^\theta$
 
-Internal Price: $P=(1+t)*P_w$
+Internal Price: $P=(1+t) P_w$
 
 ## Autarky
 
@@ -126,9 +125,10 @@ qw_i <- qw - qw_d
 Suppose: 
 
 $\alpha =$ `r par_alpha`, $\beta =$ `r par_beta`, $\gamma =$ `r par_gamma`,
+
 $\eta =$ `r par_eta`, $\epsilon =$ `r par_epsilon` and $\theta =$ `r par_theta` 
 
-Ignoring tariffis for now...
+Ignoring tariffs for now...
 
 This implies $P_0 =$ `r round(p0,2)` and $Q_0 =$ `r round(q0,2)`
 
@@ -138,7 +138,7 @@ $P^* = P_w = 1$ and $Q^* = Q_{Domestic} + Q_{Imported}$
 
 = `r par_beta` + `r par_gamma` = `r par_alpha`
 
-----
+---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 p <- seq(0.01, 2, .01)
@@ -199,7 +199,7 @@ if $\eta = -1$, this equals $\alpha \left[\ln u \right]_{P_w}^{P_0}$
 
 In this case, $\Delta CS =$ `r round(par_alpha * (log(p0) - log(pw)),2)`
 
-----
+---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 df <- rbind(df1, df2)
@@ -243,7 +243,7 @@ Since $\epsilon > 0$, this equals $-\beta \left[\frac{u^{\epsilon + 1}}{\epsilon
 
 In this case, $\Delta PS =$ `r round(-par_beta * (p0^(par_epsilon+1) - pw^(par_epsilon+1))/(par_epsilon+1),2)`
 
-----
+---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 # producer surplus
@@ -279,7 +279,7 @@ In this case we have $\Delta CS + \Delta PS > 0$
 
 In fact, $\Delta CS + \Delta PS =$ `r round( par_alpha * (log(p0) - log(pw))- par_beta * (p0^(par_epsilon+1) - pw^(par_epsilon+1))/(par_epsilon+1), 2)`
 
-----
+---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 # Net gain in welfare
@@ -351,19 +351,24 @@ WE  <- TTE + HTE # Welfare Effect
 dCS <- -par_alpha * (log(p1) - log(pw))
 dPS <- par_beta * (p1^(par_epsilon + 1) - pw^(par_epsilon + 1)) / (par_epsilon + 1)
 dTariffs <- (p1 - pw1) * q1_i
+
+p1_s <- 0.8 + 0.2 * par_theta * par_gamma / ((par_epsilon - par_eta) * par_beta + (par_theta - par_eta) * par_gamma)
 ```
 
-$dW = -M dP_w + \frac{1}{2}(P - P_w) dM$
+Welfare effect:
+
+$dW = -M dP_w + \frac{1}{2}(P - P_w) dM =$ `r round(TTE + HTE, 2)`
 
 Terms of trade effect: $-M dP_w =$ `r round(TTE,2)`
 
 Harberger triangle effect: $\frac{1}{2}(P - P_w) dM =$ `r round(HTE,2)`
 
-Welfare effect: $dW =$ `r round(TTE + HTE, 2)`
 
 ## How Accurate is the approximation?
 
-$dW =$ `r round(TTE + HTE, 2)`
+Total differential above implies $dW =$ `r round(TTE + HTE, 2)`
+
+Comparing areas suggests:
 
 $\Delta CS = \alpha \left[ \ln u \right]_{P_w}^{P_1} =$ `r round(dCS,2)`
 
@@ -373,8 +378,7 @@ $\Delta Tariffs = (P_w^1 - P_w) M =$ `r round(dTariffs,2)`
 
 $\Delta W =$ `r round(dCS + dPS + dTariffs,2)`
 
-----
-
+---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 plt5 <- ggplot(df, aes(x=x,y=y,color=curve)) + 
@@ -402,99 +406,212 @@ plt5 <- ggplot(df, aes(x=x,y=y,color=curve)) +
 print(plt5)  
 ```
 
-
-
-## Expected Outcome of Tariffs
-
-Basic micro tells us..
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-
-
-supply <- Hmisc::bezier(x = c(1, 8, 9),
-                        y = c(2, 4.5, 9)) %>%
-  as_data_frame()
-
-demand <- Hmisc::bezier(x=c(1, 3, 9),
-                        y=c(9, 3, 2)) %>%
-  as_data_frame()
-
-plot <- ggplot(mapping = aes(x,y)) + 
-  geom_path(data = supply, color = "Blue", size = 1) + 
-  geom_path(data = demand, color = "Orange", size = 1)+
-  coord_equal()
-plot
-```
-## what theory tells us..
-
-# Equilibrium (no trade)
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-
-func_supply <- approxfun(supply$x, supply$y, rule=2)
-func_demand <- approxfun(demand$x, demand$y, rule=2)
-
-eql_x <- uniroot(function(x) func_supply(x)-func_demand(x), c(0,10)) 
-x_int <- eql_x$root
-y_int <- func_demand(x_int)
-
-
-plot + geom_hline(yintercept=y_int) + geom_vline(xintercept=x_int)
-```
-
-# Equilibrium (with trade)
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-plot + geom_hline(yintercept = 2.5)
-```
-
-# A Tariff is Introduced
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-plot + geom_hline(yintercept = 3.5)
-```
-
-## Net Loss of Tariff
-``````{r echo=FALSE, warning=FALSE, message=FALSE}
-plot + geom_hline(yintercept=2.5) + geom_hline(yintercept=3.5)
-
-#we know the y value.. need x
-```
-
-## System Equations
-
-Domestic Demand: $$Q_d=\alpha(P)^\eta$$
-
-Domestic Supply: $$Q_s=\beta(P)^\epsilon$$
-
-Import Demand (the excess of domestic demand over domestic supply): $$M_d=\alpha(P)^\eta-\beta(P)^\epsilon$$
-
-Import Supply: $$M_s=Y(P_w)^\theta$$
-
-Internal Price: $$P=(1+t)*P_w$$
-
 # Assumptions
-Some text about the linear vs. non linear general approach (the presentation is a simplifcation to make it easy to understand)
 
-# Calibration
-Starting values given 
+## Linear or Non-linear?
 
-# The Basic Model
-In which changes can lead to incorrect outcomes because the simplification only makes simulation results true locally
+<small>
+From above, equilibrium occurs at the root of
+$f(P_w, t) = \alpha (1 + t)^\eta P_w^\eta - \beta (1 + t)^\epsilon P_w^\epsilon - \gamma P_w^\theta$
 
-## Intro GSIM
-Given the limitations of the simple model, GSIM is an alternative based on a 4x4 region trade region that assumes a linear form of the system equations.
+We can observe that
+$\frac{\partial f(P_w,t)}{\partial P_w} = \eta \alpha (1 + t)^\eta P_w^{\eta-1} - \epsilon \beta (1 + t)^\epsilon P_w^{\epsilon-1} - \theta \gamma P_w^{\theta-1}$
+and
+$\frac{\partial f(P_w,t)}{\partial t} = \eta \alpha (1 + t)^{\eta-1} P_w^\eta-1 - \epsilon \beta (1 + t)^{\epsilon-1} P_w^\epsilon$
 
-# Intro a Tariff
-And show how simulation compares here
+So, a linear approximation (a plane) is given by
+$\hat{f}(P_w, t) = f(P_w^0,t^0) + \frac{\partial f(P_w^0,t^0)}{\partial P_w}(P_w - P_w^0) + \frac{\partial f(P_w^0,t^0)}{\partial t}(t - t^0)$
 
-## Simulation results
+$\hat{f}(P_w,t)$ should be close to $f(P_w, t)$ near $(P_w^0,t^0)$
 
-# Welfare outcomes?
+Is the solution of $\hat{f}(P_w,t) = 0$ close to $f(P_w, t) = 0$?
+</small>
 
-## Future Work
-Could be extended to model 11x11 provinces (or 12x12 with ROW) to look at provincial trade flows. Some related work being done internally, and some outside work (Stats Can Hexagon Paper) where gravity models suggest that trade flows could potentially be quite a bit higher and are impeded by barriers. What would we find if we relaxed some trade barriers?
+## Using the Linear Approximation
 
-## Newton's Method
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+f0 <- function(Pw = 1, t =0) {
+  par_alpha * (1 + t) ^ par_eta * Pw ^ par_eta -
+    par_beta * (1 + t) ^ par_epsilon * Pw ^ par_epsilon -
+      par_gamma * Pw ^ par_theta
+}
+
+# linear approximation
+
+dfdPw <- function(Pw = 1, t = 0) {
+  par_eta * par_alpha * (1 + t) ^ par_eta * Pw ^ (par_eta - 1) - 
+    par_epsilon * par_beta * (1 + t) ^ par_epsilon * Pw ^ (par_epsilon - 1) -
+      par_theta * par_gamma * Pw ^ (par_theta - 1)
+}
+
+dfdt <- function(Pw = 1, t = 0) {
+  par_eta * par_alpha * (1 + t) ^ (par_eta - 1) * Pw ^ par_eta -
+    par_epsilon * par_beta * (1 + t) ^ (par_epsilon - 1) * Pw ^ par_epsilon
+}
+
+nsteps <- 1
+pn <- 1
+t <- 0
+t1 <- 0.2
+h <- (t1 - t) / nsteps
+for(i in 1:nsteps) {
+  pn1 <- pn - f0(pn, t) / dfdPw(pn, t) - dfdt(pn, t) / dfdPw(pn,t) * h
+  t <- t + h
+  pn <- pn1
+}
+
+pw1s <- pn
+
+nsteps <- 4
+pn <- 1
+t <- 0
+t1 <- 0.2
+h <- (t1 - t) / nsteps
+for(i in 1:nsteps) {
+  pn1 <- pn - f0(pn, t) / dfdPw(pn, t) - dfdt(pn, t) / dfdPw(pn,t) * h
+  t <- t + h
+  pn <- pn1
+}
+pw14s <- pn
+```
+
+
+$\hat{f}(P_w,t) = 0$ implies that $P_w = P_w^0 - \frac{f(P_w^0,t^0)}{\frac{\partial f}{\partial P_w}(P_w^0,t^0)} - \frac{\frac{\partial f}{\partial t}(P_w^0,t^0)}{\frac{\partial f}{\partial t}(P_w^0,t^0)}(t - t^0)$
+
+The solution to the non-linear equation gives $P_w^1 =$ `r format(round(pw1,4),nsmall=4)`.
+
+The approximation yields 1-step value of $P_w^{1s} =$ `r format(round(pw1s,4),nsmall=4)` and a 4-step value of $P_w^{4s} =$ `r format(round(pw14s,4),nsmall=4)`. 
+
+The 1-step estimate is off by `r format(round((pw1s - pw1) / pw1 * 100,2),nsmall=2)`% and the 4-step by `r format(round((pw14s - pw1) / pw1 * 100,2),nsmall=2)`% 
+
+
+## What about Trumpian Tariffs?
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+t <- 1
+pars <- c(a = par_gamma, 
+          b = par_theta - par_eta, 
+          c = par_beta * (1 + t) ^ par_epsilon, 
+          d = par_epsilon - par_eta, 
+          e = par_alpha * (1 + t) ^ par_eta)
+
+rslt <- uniroot(f_bm, c(0.1,2), pars, tol=5e-10)
+ptrump <- rslt$root
+
+nsteps <- 1
+pn <- 1
+t <- 0
+t1 <- 1
+h <- (t1 - t) / nsteps
+for(i in 1:nsteps) {
+  pn1 <- pn - f0(pn, t) / dfdPw(pn, t) - dfdt(pn, t) / dfdPw(pn,t) * h
+  t <- t + h
+  pn <- pn1
+}
+
+ptrump1s <- pn
+
+nsteps <- 4
+pn <- 1
+t <- 0
+t1 <- 1
+h <- (t1 - t) / nsteps
+for(i in 1:nsteps) {
+  pn1 <- pn - f0(pn, t) / dfdPw(pn, t) - dfdt(pn, t) / dfdPw(pn,t) * h
+  t <- t + h
+  pn <- pn1
+}
+ptrump4s <- pn
+```
+
+Let's try a 100% tariff in the simple model...
+
+The non-linear solution gives the new world price $P_{trump} =$ `r format(round(ptrump,4),nsmall=4)`.
+
+The resulting domestic price is \$`r format(round(2*ptrump,2), nsmall=2)` which is just below the $`r format(round(p0,2), nsmall=2)` price with no trade.
+
+The approximation yields 1-step value of $P_{trump}^{1s} =$ `r format(round(ptrump1s,4),nsmall=4)` and a 4-step value of $P_{trump}^{4s} =$ `r format(round(ptrump4s,4),nsmall=4)`. 
+
+The 1-step is off by `r format(round((ptrump1s - ptrump) / ptrump * 100,2),nsmall=2)`% and the 4-step by `r format(round((ptrump4s - ptrump) / ptrump * 100,2),nsmall=2)`%
+
+So, perhaps be cautious when using linear approximations... or, take small steps...
+
+# Global Simulation Analysis of Industry-Level Trade Policy (GSIM) 
+
+## Intro to GSIM 
+
+<small>
+GSIM is a widely used modelling strategy for the partial equilibrium analysis of global trade policy changes developed by Joseph Francois and H. Keith Hall.
+
+GSIM is a static, deterministic, single commodity bilateral trade model driven by export supply and bilateral import demand equations. Imports and exports are assumed to be a function of the world price after taking into account relevant bilateral trade taxes or subsidies. Since tariffs are bilateral and differ from country to country, changes in tariffs lead to changes in relative prices that drive differential changes in imports from various sources. Elasticities of substitution (Armington elasticities) determine the extent to which changes in relative prices lead to switches in the source of imports.
+
+The model solves numerically to find market clearing prices such that global imports equate to global exports.
+
+Francois and Hall provide 4x4 and 25x25 Excel based calculators with linearized versions of the model. We have ported a generalized version of those models to the *R* software environment for statistical computing and graphics. 
+</small>
+
+## GSIM Limitations
+
+Because the partial equilibrium approach ignores other products that may be substitutes in consumption or production, losses and gains are potentially overestimated, as transfers of resources to or from other sectors are ignored. However, the approach has the useful advantage of allowing for a relatively rapid and transparent analysis of a wide range of trade policy issues with a minimum of data and computational requirements.
+
+GSIM is ideal for preliminary work especially when data availability is limited.
+
+## Recent GSIM Example
+
+In September 2018, the U.S. Department of Agriculture used GSIM to estimate the level of gross trade damage caused by retaliatory tariffs to U.S. agricultural exports by commodity.
+
+In the model, Chinese import demand for product i coming from the U.S. falls as the result of a retaliatory tariff. The level imported comes from the following equation: 
+
+$M_{i,(US,CN)}^\tau = \left[ \frac{ \alpha_{i,(US,CN)} }{ P_{i,(US)}^*(1+\tau_{i,(US,CN)})} \right]^\sigma P_{i,(CN)}^{\sigma - 1} E_{i,(CN)}$
+
+
+# Working with GSIM
+
+## Solution Methods
+
+Choose export prices for each region so that global demand equals global supply.
+
+$$
+F(\mathbf P) =
+F \left( 
+\begin{matrix}
+P_{US}\\
+P_{JP}\\
+P_{EU}\\
+P_{RW}
+\end{matrix}
+\right) =
+\left(
+\begin{matrix}
+F_{US}\\
+F_{JP}\\
+F_{EU}\\
+F_{RW}
+\end{matrix}
+\right)
+\left(
+\begin{matrix}
+P_{US}\\
+P_{JP}\\
+P_{EU}\\
+P_{RW}
+\end{matrix}
+\right)
+=
+\left(
+\begin{matrix}
+0\\
+0\\
+0\\
+0\\
+\end{matrix}
+\right)
+$$
+
+We can use a multi-dimensional version of Newton's Method to improve a price vector...
+
+## Recall Newton's Method
+
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 a <- 0.25
 b <- -1
@@ -540,3 +657,586 @@ plt
 
 ```
 
+
+## The Jacobian
+
+<small>
+$$J( \mathbf{P}) =
+\left. 
+\left[ 
+\begin{matrix}
+\frac{\partial F_{US}}{\partial P_{US}}  && \frac{\partial F_{US}}{\partial P_{JP}} && \cdots && \frac{\partial F_{US}}{\partial P_{RW}}\\
+\frac{\partial F_{JP}}{\partial P_{US}}  && \frac{\partial F_{JP}}{\partial P_{JP}} && \cdots && \frac{\partial F_{JP}}{\partial P_{RW}}\\
+\frac{\partial F_{EU}}{\partial P_{US}}  && \frac{\partial F_{EU}}{\partial P_{JP}} && \cdots && \frac{\partial F_{EU}}{\partial P_{RW}}\\
+\frac{\partial F_{RW}}{\partial P_{US}}  && \frac{\partial F_{RW}}{\partial P_{JP}} && \cdots && \frac{\partial F_{RW}}{\partial P_{RW}}\\
+\end{matrix}
+\right] \;
+\right\rvert_{\mathbf{P}=P_0} 
+$$</small>
+
+with
+
+<small>
+$$J_{ij} = \partial F_i / \partial P_j \approx 
+\begin{cases}
+(F(\cdots,P_j + h,\cdots) - F(P))/h\text{, difference quotient, or}\\
+F(\cdots,P_j + h,\cdots) - F(P)\text{, finite difference} \\
+\end{cases}$$
+</small>
+
+
+## Follow the Yellow Brick (_Jacobian_) Road 
+
+A first order approximation to F around $P_0$ is given by
+
+$F(\mathbf{P}) = F(\mathbf{P_0}) + J(\mathbf{P_0}) \mathbf{dP}$
+
+As in the simple model above, we can solve for the price change that makes $F(\mathbf{P}) = \mathbf{0}$ as follows
+
+$\mathbf{dP} = -J^{-1}(\mathbf{P_0}) F(\mathbf{P_0})$
+
+So, take a step along $\mathbf{dP}$ and evaluate again...
+
+# Simulation Results
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# GSIM 4x4 model 
+
+# cross price effects
+cross_price_effects <- function(x = rep(0,4), eq2, dT) {
+  n <- ncol(eq2)
+  rslt <- matrix(NA_real_, nrow=n, ncol = n)
+  for(i in 1:n) {
+    tmp <- matrix(1, nrow=n, ncol=1) %*% eq2[,i]
+    tmp[n*1:n + 1:n - n] <- 0
+    rslt[,i] <- tmp %*% (dT[,i] + x)
+  }
+  rslt
+}
+
+# change in demand
+demand_effects <- function(x = rep(0,4), phi, eq3, chi, dT) {
+  n <- length(x)
+  rslt <- rep(NA_real_, n)
+  for(i in 1:n) {
+    rslt[i] <- (phi[i,] * eqn3[i,]) %*% (dT[i,] + x[i])
+  }
+  rslt + rowSums(phi * chi)
+}
+
+# calc numerical Jacobian
+Jacobian <- function(x, eqn2, eqn3, phi, dT, xDemand) {
+  J <- matrix(NA, nrow=4, ncol=4)
+  h <- 1/32768
+  
+  for(i in 1:4) {
+    x1 <- x
+    x1[i] <- x[i] + h
+    
+    chi1 <- cross_price_effects(x1, eqn2, dT)
+    
+    dSupply1 <- x1 * Ex
+    
+    dDemand1 <- demand_effects(x1, phi, eqn3, chi1, dT)
+    
+    xDemand1 <- dDemand1 - dSupply1
+    J[i,] <- (xDemand1 - xDemand ) / h
+  }
+  J
+}
+
+calcEqm <- function(x0, phi, eqn2, eqn3, dT) {
+  x <- x0
+  repeat {
+    chi <- cross_price_effects(x, eqn2, dT)
+    
+    dSupply <- x * Ex
+    
+    dDemand <- demand_effects(x, phi, eqn3, chi, dT)
+    
+    xDemand <- dDemand - dSupply
+    
+    Jacob <- Jacobian(x, eqn2, eqn3, phi, dT, xDemand)
+    
+    x1 <- x - solve(Jacob) %*% xDemand / 1024 # 2^10 
+    
+    chi1 <- cross_price_effects(x1, eqn2, dT)
+    
+    dSupply1 <- x1 * Ex
+    
+    dDemand1 <- demand_effects(x1, phi, eqn3, chi1, dT)
+    
+    xDemand1 <- dDemand1 - dSupply1
+    
+    SSE <- sum(xDemand * xDemand)
+    SSE1 <- sum(xDemand1 * xDemand1)
+    if (SSE1 < SSE) x <- x1
+    else break;
+  }
+  x
+}
+```
+
+
+## Benchmark Case
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# elasticities
+Em <- c(US = -1.25, JP = -1.25, EU = -1.25, RW = -1.25) # import demand
+
+Ex <- c(US = 1.5, JP = 1.5, EU = 1.5, RW = 1.5) # export supply
+
+Es <- c(US = 5, JP = 5, EU = 5, RW = 5) # substitution
+
+# trade flows
+M <- matrix(c(  0,  50, 200, 300,
+              500,   0, 150, 200,
+              300, 100, 200, 200,
+               50, 100, 110,  20),
+            nrow = 4, ncol=4, byrow = TRUE)
+
+row.names(M) <- c("US", "JP", "EU", "RW")
+colnames(M)  <- c("US", "JP", "EU", "RW")
+
+# initial import tariffs 
+T0 <- matrix(c(  1.00, 1.21, 1.41, 1.22,
+                 1.37, 1.00, 1.31, 1.23,
+                 1.32, 1.36, 1.00, 1.18,
+                 1.57, 1.41, 1.25, 1.15),
+              nrow = 4, ncol=4, byrow = TRUE)
+
+row.names(T0) <- c("US", "JP", "EU", "RW")
+colnames(T0)  <- c("US", "JP", "EU", "RW")
+
+kable(M, caption = "Trade Flows")
+```
+
+<small>and</small>
+
+```{r echo=FALSE,warning=FALSE, message=FALSE}
+kable(T0, caption = "Tariffs")
+```
+
+# US-EU Bilateral Agreement
+
+## Revised Tariffs US-EU
+
+```{r warning=FALSE, message=FALSE}
+T1 <- T0
+
+T1["EU","US"] <- T1["US","EU"] <- 1 # US-EU trade agreement
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+kable(T1, caption = "Revised Tariffs")
+```
+
+## Equilibrium Prices US-EU
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# a vector of ones
+i_agg <- matrix(1, nrow=nrow(M), ncol=1)
+
+# Total imports and exports
+Tot_imp <- t(i_agg) %*% M
+row.names(Tot_imp) <- "Imports"
+
+Tot_exp <- M %*% i_agg
+colnames(Tot_exp) <- "Exports"
+
+# import shares at internal prices
+mult <- diag( c(1 / (t(i_agg) %*% (M * T0))))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+theta <- (M * T0) %*% mult
+
+# export shares at world prices
+mult <- diag(1/c(M %*% i_agg))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+phi <- mult %*% M
+
+# own price elasticities
+eqn3 <- theta %*% diag( Em ) - (1 - theta) %*% diag( Es )
+colnames(eqn3) <- colnames(M)
+
+# cross price elasticities
+eqn2 <- theta %*% diag( Em + Es )
+colnames(eqn3) <- colnames(M)
+
+# reported prices
+# x <- c(0.0792, -0.0316, 0.0480, -0.0184)
+#
+# try from zero...
+x <- calcEqm(rep(0, 4), phi, eqn2, eqn3, T1/T0 - 1)
+
+chi <- cross_price_effects(x, eqn2, T1/T0 - 1)
+```
+
+P = (`r paste(format(round(x,4),nsmall=2), sep=",")`)^T^
+
+## Change in Trade Flows US-EU
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dPCT <- (x %*% t(i_agg) + T1/T0 - 1) * eqn3 + chi
+
+M1 <- M * (1 + dPCT) * (1 + x %*% t(i_agg))
+
+dM <- M1 - M
+
+kable(dM, caption = "Impact of US-EU Tariff Elimination")
+```
+
+
+## Welfare Changes US-EU
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dP <- (1 + x %*% t(i_agg)) * T1/T0 -1
+
+dCompP <- matrix(NA, nrow=1, ncol = ncol(dP))
+row.names(dCompP) <- "Composite Price"
+colnames(dCompP) <- c("US", "JP", "EU", "RW")
+for(i in 1:ncol(dCompP)) {
+  dCompP[1,i] <- sum(c(dP[,i] * theta[,i]))
+}
+
+dTariff <- M1 * (T1 - 1) - M * (T0 - 1)
+
+dRev <- colSums(dTariff)
+
+dCS <- c((0.5 * dCompP ^ 2) * colSums(M * T0) * sign(dCompP) * Em - colSums(M * T0) * dCompP)
+names(dCS) <- c("US", "JP", "EU", "RW")
+
+dPS <- c(x * Tot_exp *(1 + 0.5 * Ex * x))
+names(dPS) <- c("US", "JP", "EU", "RW")
+
+dW <- dPS + dCS + dRev
+
+# make report
+
+df_report <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"),
+                        ProducerSurplus = format(round(dPS,1),nsmall=1),
+                        ConsumerSurplus = format(round(dCS,1),nsmall=1),
+                        TariffRevenue = format(round(dRev,1),nsmall=1),
+                        NetWelfare = format(round(dW,1),nsmall=1))
+
+kable(df_report, caption = "Impact of Tariff Changes", row.names = FALSE)
+```
+
+
+## Welfare Effects US-EU
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+df_plot <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                      Component = "Producer Surplus", Value = dPS)
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Consumer Surplus", Value = dCS))
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Tariff Revenue", Value = dRev))
+
+df_netW <- data.frame(Region=c("United States", "Japan", "European Union", "Rest of World"),
+                      Component=NA,
+                      Value=dW)
+
+g <- ggplot(df_plot, aes(x=Region, y=Value, fill = Component)) + 
+     geom_bar(stat = "identity") +
+     scale_x_discrete(limits=c("United States", "Japan", "European Union", "Rest of World")) +
+     geom_hline(yintercept = 0) + 
+     geom_point(data=df_netW, size=2, show.legend = FALSE) +
+     labs(x="", y="Welfare", title="Total Welfare Effects", subtitle = "By Component")
+
+print(g)
+```
+
+# US-JP Bilateral Agreement
+
+## Revised Tariffs US-JP
+
+```{r warning=FALSE, message=FALSE}
+T1 <- T0
+
+T1["JP","US"] <- T1["US","JP"] <- 1 # US-EU trade agreement
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+kable(T1, caption = "Revised Tariffs US-JP")
+```
+
+## Equilibrium Prices US-JP
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# a vector of ones
+i_agg <- matrix(1, nrow=nrow(M), ncol=1)
+
+# Total imports and exports
+Tot_imp <- t(i_agg) %*% M
+row.names(Tot_imp) <- "Imports"
+
+Tot_exp <- M %*% i_agg
+colnames(Tot_exp) <- "Exports"
+
+# import shares at internal prices
+mult <- diag( c(1 / (t(i_agg) %*% (M * T0))))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+theta <- (M * T0) %*% mult
+
+# export shares at world prices
+mult <- diag(1/c(M %*% i_agg))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+phi <- mult %*% M
+
+# own price elasticities
+eqn3 <- theta %*% diag( Em ) - (1 - theta) %*% diag( Es )
+colnames(eqn3) <- colnames(M)
+
+# cross price elasticities
+eqn2 <- theta %*% diag( Em + Es )
+colnames(eqn3) <- colnames(M)
+
+# reported prices
+# x <- c(0.0792, -0.0316, 0.0480, -0.0184)
+#
+# try from zero...
+x <- calcEqm(rep(0, 4), phi, eqn2, eqn3, T1/T0 - 1)
+
+chi <- cross_price_effects(x, eqn2, T1/T0 - 1)
+```
+
+P = (`r paste(format(round(x,4),nsmall=2), sep=",")`)^T^
+
+## Change in Trade Flows US-JP
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dPCT <- (x %*% t(i_agg) + T1/T0 - 1) * eqn3 + chi
+
+M1 <- M * (1 + dPCT) * (1 + x %*% t(i_agg))
+
+dM <- M1 - M
+
+kable(dM, caption = "Impact of US-JP Tariff Elimination")
+```
+
+
+## Welfare Changes US-JP
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dP <- (1 + x %*% t(i_agg)) * T1/T0 -1
+
+dCompP <- matrix(NA, nrow=1, ncol = ncol(dP))
+row.names(dCompP) <- "Composite Price"
+colnames(dCompP) <- c("US", "JP", "EU", "RW")
+for(i in 1:ncol(dCompP)) {
+  dCompP[1,i] <- sum(c(dP[,i] * theta[,i]))
+}
+
+dTariff <- M1 * (T1 - 1) - M * (T0 - 1)
+
+dRev <- colSums(dTariff)
+
+dCS <- c((0.5 * dCompP ^ 2) * colSums(M * T0) * sign(dCompP) * Em - colSums(M * T0) * dCompP)
+names(dCS) <- c("US", "JP", "EU", "RW")
+
+dPS <- c(x * Tot_exp *(1 + 0.5 * Ex * x))
+names(dPS) <- c("US", "JP", "EU", "RW")
+
+dW <- dPS + dCS + dRev
+
+# make report
+
+df_report <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"),
+                        ProducerSurplus = format(round(dPS,1),nsmall=1),
+                        ConsumerSurplus = format(round(dCS,1),nsmall=1),
+                        TariffRevenue = format(round(dRev,1),nsmall=1),
+                        NetWelfare = format(round(dW,1),nsmall=1))
+
+kable(df_report, caption = "Impact of US-JP Tariff Changes", row.names = FALSE)
+```
+
+
+## Welfare Effects US-JP
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+df_plot <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                      Component = "Producer Surplus", Value = dPS)
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Consumer Surplus", Value = dCS))
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Tariff Revenue", Value = dRev))
+
+df_netW <- data.frame(Region=c("United States", "Japan", "European Union", "Rest of World"),
+                      Component=NA,
+                      Value=dW)
+
+g <- ggplot(df_plot, aes(x=Region, y=Value, fill = Component)) + 
+     geom_bar(stat = "identity") +
+     scale_x_discrete(limits=c("United States", "Japan", "European Union", "Rest of World")) +
+     geom_hline(yintercept = 0) + 
+     geom_point(data=df_netW, size=2, show.legend = FALSE) +
+     labs(x="", y="Welfare", title="Total Welfare Effects US-JP", subtitle = "By Component")
+
+print(g)
+```
+
+
+# US Unilateral Action
+
+## Revised Tariffs US Alone
+
+```{r warning=FALSE, message=FALSE}
+T1 <- T0
+
+T1["JP","US"] <- T1["EU","US"] <- T1["RW","US"] <- 1
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+kable(T1, caption = "Revised Tariffs US Alone")
+```
+
+## Equilibrium Prices US Alone
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# a vector of ones
+i_agg <- matrix(1, nrow=nrow(M), ncol=1)
+
+# Total imports and exports
+Tot_imp <- t(i_agg) %*% M
+row.names(Tot_imp) <- "Imports"
+
+Tot_exp <- M %*% i_agg
+colnames(Tot_exp) <- "Exports"
+
+# import shares at internal prices
+mult <- diag( c(1 / (t(i_agg) %*% (M * T0))))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+theta <- (M * T0) %*% mult
+
+# export shares at world prices
+mult <- diag(1/c(M %*% i_agg))
+row.names(mult) <- row.names(M)
+colnames(mult) <- colnames(M)
+
+phi <- mult %*% M
+
+# own price elasticities
+eqn3 <- theta %*% diag( Em ) - (1 - theta) %*% diag( Es )
+colnames(eqn3) <- colnames(M)
+
+# cross price elasticities
+eqn2 <- theta %*% diag( Em + Es )
+colnames(eqn3) <- colnames(M)
+
+# reported prices
+# x <- c(0.0792, -0.0316, 0.0480, -0.0184)
+#
+# try from zero...
+x <- calcEqm(rep(0, 4), phi, eqn2, eqn3, T1/T0 - 1)
+
+chi <- cross_price_effects(x, eqn2, T1/T0 - 1)
+```
+
+P = (`r paste(format(round(x,4),nsmall=2), sep=",")`)^T^
+
+## Change in Trade Flows US Alone
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dPCT <- (x %*% t(i_agg) + T1/T0 - 1) * eqn3 + chi
+
+M1 <- M * (1 + dPCT) * (1 + x %*% t(i_agg))
+
+dM <- M1 - M
+
+kable(dM, caption = "Impact of US Tariff Elimination")
+```
+
+
+## Welfare Changes US Alone
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+dP <- (1 + x %*% t(i_agg)) * T1/T0 -1
+
+dCompP <- matrix(NA, nrow=1, ncol = ncol(dP))
+row.names(dCompP) <- "Composite Price"
+colnames(dCompP) <- c("US", "JP", "EU", "RW")
+for(i in 1:ncol(dCompP)) {
+  dCompP[1,i] <- sum(c(dP[,i] * theta[,i]))
+}
+
+dTariff <- M1 * (T1 - 1) - M * (T0 - 1)
+
+dRev <- colSums(dTariff)
+
+dCS <- c((0.5 * dCompP ^ 2) * colSums(M * T0) * sign(dCompP) * Em - colSums(M * T0) * dCompP)
+names(dCS) <- c("US", "JP", "EU", "RW")
+
+dPS <- c(x * Tot_exp *(1 + 0.5 * Ex * x))
+names(dPS) <- c("US", "JP", "EU", "RW")
+
+dW <- dPS + dCS + dRev
+
+# make report
+
+df_report <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"),
+                        ProducerSurplus = format(round(dPS,1),nsmall=1),
+                        ConsumerSurplus = format(round(dCS,1),nsmall=1),
+                        TariffRevenue = format(round(dRev,1),nsmall=1),
+                        NetWelfare = format(round(dW,1),nsmall=1))
+
+kable(df_report, caption = "Impact of US Tariff Changes", row.names = FALSE)
+```
+
+
+## Welfare Effects US Only
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+df_plot <- data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                      Component = "Producer Surplus", Value = dPS)
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Consumer Surplus", Value = dCS))
+
+df_plot <- rbind(df_plot, 
+                 data.frame(Region = c("United States", "Japan", "European Union", "Rest of World"), 
+                            Component = "Tariff Revenue", Value = dRev))
+
+df_netW <- data.frame(Region=c("United States", "Japan", "European Union", "Rest of World"),
+                      Component=NA,
+                      Value=dW)
+
+g <- ggplot(df_plot, aes(x=Region, y=Value, fill = Component)) + 
+     geom_bar(stat = "identity") +
+     scale_x_discrete(limits=c("United States", "Japan", "European Union", "Rest of World")) +
+     geom_hline(yintercept = 0) + 
+     geom_point(data=df_netW, size=2, show.legend = FALSE) +
+     labs(x="", y="Welfare", title="Total Welfare Effects US Alone", subtitle = "By Component")
+
+print(g)
+```
+
+# Future Work
+
+## Provincial Barriers to Trade
+
+Could easily be extended to model 11x11 provinces (including 10 provinces and Rest of World) to look at provincial trade flows. 
+
+Some related work being done internally, and some outside work (Stats Can Hexagon Paper comes to mind) where gravity models suggest that trade flows could potentially be quite a bit higher and are impeded by barriers. 
+
+What would we find if we relaxed some trade barriers?
+
+# The End
